@@ -52,6 +52,8 @@ def is_authenticated(session_id):
 def get_refreshed_token(session_id):
     refresh_token = get_user_tokens(session_id).refresh_token
 
+
+
     base_url = 'https://accounts.spotify.com/api/token'
     payload = {
         'grant_type': 'refresh_token',
