@@ -77,7 +77,7 @@ def callback(request, format=None):
 
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
-        authenticated = is_authenticated(self.request.session.session_key)
+        authenticated = is_authenticated(request.session.session_key)
         return Response({'status': authenticated}, status=status.HTTP_200_OK)
 
 
