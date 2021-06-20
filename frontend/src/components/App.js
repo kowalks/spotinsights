@@ -1,35 +1,26 @@
-import React, { Component } from "react";
+ import React, { Component } from "react";
+import { Grid, Button, Typography } from "@material-ui/core";
 import { render } from "react-dom";
+import Player from "./Player";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      spotifyAuthenticated: false
+      spotifyAuthenticated: false,
+      song: {}
     };
 
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
+    this.getCurrentSong = this.getCurrentSong.bind(this);
   }
 
   componentDidMount() {
+    this.interval = setInterval(this.getCurrentSong, 5000);
+  }
 
-    // fetch("api/lead")
-    //   .then(response => {
-    //     if (response.status > 400) {
-    //       return this.setState(() => {
-    //         return { placeholder: "Something went wrong!" };
-    //       });
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     this.setState(() => {
-    //       return {
-    //         data,
-    //         loaded: true
-    //       };
-    //     });
-    //   });
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   authenticateSpotify() {
@@ -47,12 +38,37 @@ class App extends Component {
       });
   }
 
+  getCurrentSong() {
+    fetch('/spotify/current-song').then((response) => {
+      if (!response.ok) {
+        return {};
+      } else {
+        return response.json();
+      }
+    }).then((data) => {
+      this.setState({song: data});
+      console.log(data);
+    });
+  }
+
   render() {
     return(
-        <div>
-          <p>Teste</p>
-          <button onClick={this.authenticateSpotify}>Log In</button>
-        </div>
+      <Grid container spacing={1}>
+        <Grid item xs={12} align="center">
+          <Typography variant="h4" component="h4">
+            SpotInsights
+          </Typography>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.authenticateSpotify}>
+            Log In
+          </Button>
+        </Grid>
+        <Player {...this.state.song} />
+      </Grid>
     );
   }
 }

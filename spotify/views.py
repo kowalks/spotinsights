@@ -89,7 +89,28 @@ class CurrentSong(APIView):
             request.session.create()
 
         response = spotify_api_request(request.session.session_key, endpoint)
-        print(response)
-        print('aaaa')
 
-        return Response(response, status=status.HTTP_200_OK)
+        if 'error' in response or 'item' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        item = response.get('item')
+
+        artists_string = ''
+
+        for i, artist in enumerate(item.get('artists')):
+            if i>0:
+                artists_string += ', '
+            name = artist.get('name')
+            artists_string += name
+
+        song = {
+            'title': item.get('name'),
+            'artist': artists_string,
+            'duration': item.get('duration_ms'),
+            'time': response.get('progress_ms'),
+            'album': item.get('album').get('name'),
+            'image_url': item.get('album').get('images')[0].get('url'),
+            'song_id': item.get('id')
+        }
+
+        return Response(song, status=status.HTTP_200_OK)
