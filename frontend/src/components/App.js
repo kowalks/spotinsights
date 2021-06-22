@@ -8,7 +8,7 @@ class App extends Component {
     super(props);
     this.state = {
       spotifyAuthenticated: false,
-      song: {}
+      song: {},
     };
 
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.getCurrentSong, 5000);
+    this.interval = setInterval(this.getCurrentSong, 1000);
   }
 
   componentWillUnmount() {

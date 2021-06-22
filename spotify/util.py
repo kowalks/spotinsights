@@ -5,7 +5,7 @@ from .credentials import *
 from requests import post, put, get
 
 
-BASE_URL = 'http://api.spotify.com/v1/me/'
+BASE_URL = 'http://api.spotify.com/v1/'
 
 
 def get_user_tokens(session_id):
@@ -71,22 +71,32 @@ def get_refreshed_token(session_id):
     update_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
 
-def spotify_api_request(session_id, endpoint, is_post=False, is_put=False):
+def spotify_api_request(session_id, endpoint, is_post=False, is_put=False, extra=None):
     tokens = get_user_tokens(session_id)
 
-    payload = {
+    headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + tokens.access_token
     }
 
     if is_post:
-        post(BASE_URL + endpoint, headers=payload)
-    if is_put:
-        put(BASE_URL + endpoint, headers=payload)
-
-    response = get(BASE_URL + endpoint, {}, headers=payload)
+        response = post(BASE_URL + endpoint, headers=headers)
+    elif is_put:
+        response = put(BASE_URL + endpoint, headers=headers)
+    else:
+        response = get(BASE_URL + endpoint, headers=headers, params=extra)
 
     try:
         return response.json()
     except:
         return {'error': 'Problem with Spotify API request'}
+
+
+def artists_string(artists):
+    artists_str = ''
+    for i, artist in enumerate(artists):
+        if i > 0:
+            artists_str += ', '
+        name = artist.get('name')
+        artists_str += name
+    return artists_str
