@@ -131,4 +131,3 @@ dmypy.json
 
 .idea
 frontend/node_modules
-frontend/static/frontend

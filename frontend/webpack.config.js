@@ -1,10 +1,11 @@
 const path = require("path");
 const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "./static/frontend"),
+    path: path.resolve(__dirname, "./static/js/"),
     filename: "[name].js",
   },
   module: {
@@ -20,6 +21,11 @@ module.exports = {
   },
   optimization: {
     minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      })
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
