@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
-from .credentials import *
+from django.shortcuts import redirect
 from rest_framework.views import APIView
-from requests import Request, post
+from requests import Request
 from rest_framework import status
 from rest_framework.response import Response
+from .credentials import *
+from requests import post
 from .util import *
 from math import floor
 
@@ -172,11 +173,6 @@ class Recibofy(APIView):
         # Create playlist
         endpoint = f'users/{user_id}/playlists'
         response = spotify_api_request(request.session.session_key, endpoint, is_post=True)
-
-        # data = {
-        #     'tracks': tracks,
-        #     'playlist_name': ''
-        # }
 
         return Response(tracks, status=status.HTTP_200_OK)
 
