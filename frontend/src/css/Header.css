@@ -1,0 +1,32 @@
+a{
+    text-decoration: none;
+}
+
+.Header{
+    /* background-color: #001D3D; */
+    /* background-color: #003566; */
+    color:#FFC300;
+    align-items: center;
+    padding: 10px;
+    justify-content: center;
+    /* justify-content: space-between; */
+}
+
+.Header a{
+    color:#FFC300;
+}
+
+.Title{
+    display: block;
+}
+
+.Menu{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    justify-content: space-evenly;
+    color: #FFD60A;
+}
+.Menu a{
+    color: #FFD60A;
+}
