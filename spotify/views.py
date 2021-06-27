@@ -119,12 +119,14 @@ class CurrentSong(APIView):
 
 class TopTracks(APIView):
     def get(self, request, format=None):
+        limit = request.GET.get('limit', 20)
+
         endpoint = 'me/top/tracks'
 
         if not request.session.exists(request.session.session_key):
             request.session.create()
 
-        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': '20'})
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
 
         if 'error' in response or 'items' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -146,7 +148,7 @@ class TopTracks(APIView):
 
 
 class Recibofy(APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         tracks = TopTracks.get(self, request).data
 
         # User info

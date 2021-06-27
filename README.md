@@ -45,3 +45,44 @@ real, executamos o comando em modo dev.
 ```bash 
   npm run dev
 ```
+
+
+## API Reference
+
+#### Status de autenticação com Spotify
+
+```http
+  GET /spotify/is-authenticated
+```
+
+#### URL para autenticação
+
+```http
+  GET /spotify/get-auth-url
+```
+
+#### Música que está tocando no momento
+
+```http
+  GET /spotify/current-song
+```
+
+#### Músicas mais ouvidas pelo usuário
+
+```http
+  GET /spotify/top-tracks
+```
+
+| Query Parameter | Tipo     | Descrição                       |
+| :-------- | :------- | :-------------------------------- |
+| `limit`   | `inteiro`| _Opcional_. Número máximo de itens a serem exibidos|
+
+#### Criar playlist com as músicas mais ouvidas
+
+```http
+  POST /spotify/recibofy
+```
+
+| Query Parameter | Tipo     | Descrição                       |
+| :-------- | :------- | :-------------------------------- |
+| `limit`   | `inteiro`| _Opcional_. Número máximo de itens a serem exibidos|
