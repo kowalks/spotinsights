@@ -2,10 +2,12 @@ from .models import SpotifyToken
 from django.utils import timezone
 from datetime import timedelta
 from .credentials import *
-from requests import post, put, get
+from requests import post, put, get, request
+from math import floor
+import json
 
 
-BASE_URL = 'http://api.spotify.com/v1/'
+BASE_URL = 'https://api.spotify.com/v1/'
 
 
 def get_user_tokens(session_id):
@@ -52,8 +54,6 @@ def is_authenticated(session_id):
 def get_refreshed_token(session_id):
     refresh_token = get_user_tokens(session_id).refresh_token
 
-
-
     base_url = 'https://accounts.spotify.com/api/token'
     payload = {
         'grant_type': 'refresh_token',
@@ -80,11 +80,14 @@ def spotify_api_request(session_id, endpoint, is_post=False, is_put=False, extra
     }
 
     if is_post:
-        response = post(BASE_URL + endpoint, headers=headers)
+        response = post(BASE_URL + endpoint, headers=headers, json=extra)
     elif is_put:
-        response = put(BASE_URL + endpoint, headers=headers)
+        response = put(BASE_URL + endpoint, headers=headers, data=extra)
+        return
     else:
         response = get(BASE_URL + endpoint, headers=headers, params=extra)
+
+    
 
     try:
         return response.json()
@@ -100,3 +103,10 @@ def artists_string(artists):
         name = artist.get('name')
         artists_str += name
     return artists_str
+
+
+def ms_to_min_sec(duration_ms):
+    min = floor(duration_ms / 60000)
+    sec = floor((duration_ms % 60000) / 1000)
+
+    return min, sec
