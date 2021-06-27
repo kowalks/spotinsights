@@ -83,11 +83,8 @@ def spotify_api_request(session_id, endpoint, is_post=False, is_put=False, extra
         response = post(BASE_URL + endpoint, headers=headers, json=extra)
     elif is_put:
         response = put(BASE_URL + endpoint, headers=headers, data=extra)
-        return
     else:
         response = get(BASE_URL + endpoint, headers=headers, params=extra)
-
-    
 
     try:
         return response.json()

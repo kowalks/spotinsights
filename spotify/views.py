@@ -124,38 +124,13 @@ class TopTracks(APIView):
         if not request.session.exists(request.session.session_key):
             request.session.create()
 
-        response = spotify_api_request(request.session.session_key, endpoint)
-
-        if 'error' in response or 'items' not in response:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        items = response.get('items')
-
-        top_tracks = []
-
-        for song in items:
-            name = song.get('name')
-            top_tracks.append(name)
-
-        return Response(top_tracks, status=status.HTTP_200_OK)
-
-
-class Recibofy(APIView):
-    def get(self, request, format=None):
-        endpoint = 'me/top/tracks'
-
-        if not request.session.exists(request.session.session_key):
-            request.session.create()
-
         response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': '20'})
 
         if 'error' in response or 'items' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         items = response.get('items')
-
         tracks = []
-        uris = []
 
         for i, song in enumerate(items):
             name = song.get('name')
@@ -164,8 +139,15 @@ class Recibofy(APIView):
             rating = song.get('popularity')
             duration = song.get('duration_ms')
             min, sec = ms_to_min_sec(duration)
-            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec))
-            uris.append(song.get('uri'))
+            uri = song.get('uri')
+            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri))
+
+        return Response(tracks, status=status.HTTP_200_OK)
+
+
+class Recibofy(APIView):
+    def get(self, request, format=None):
+        tracks = TopTracks.get(self, request).data
 
         # User info
         endpoint = 'me/'
@@ -173,14 +155,14 @@ class Recibofy(APIView):
 
         # Create playlist
         endpoint = f'users/{user_id}/playlists'
-        response = spotify_api_request(request.session.session_key, endpoint, is_post=True, extra={
+        playlist = spotify_api_request(request.session.session_key, endpoint, is_post=True, extra={
             'name': 'SpotInsights Hits',
             'description': 'Suas músicas mais ouvidas em 2021.',
             'public': False
         })
 
-        playlist_id = response.get('id')
-        playlist_uri = response.get('uri')
+        playlist_id = playlist.get('id')
+        playlist_uri = playlist.get('uri')
         
         # Upload custom image
         endpoint = f'playlists/{playlist_id}/images'
@@ -192,7 +174,7 @@ class Recibofy(APIView):
         # Add itens to playlist
         endpoint = f'playlists/{playlist_id}/tracks'
         spotify_api_request(request.session.session_key, endpoint, is_post=True, extra={
-            'uris': uris
+            'uris': [item['uri'] for item in tracks]
         })
 
         # Defining response 
