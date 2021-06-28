@@ -10,7 +10,6 @@ export default function SpotStats() {
             <Container  className = 'algo'>
                 <p>Hello World!</p> 
             </Container>
-            <SongsChart /> 
         </div>
         
     );
