@@ -1,3 +1,14 @@
 .algo{
     background-color: coral;
 }
+.vertical-bar-series-plot{
+    margin-left: 100px;
+    margin-top: 150px;
+    background-color: coral;
+    /* width: 300px;
+    height: 300px; */
+}
+.vertical-bar-series-bar {
+    background-color: black;
+    width: 25px;
+}
