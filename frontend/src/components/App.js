@@ -24,11 +24,11 @@ class App extends Component {
     };
 
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
-    this.getCurrentSong = this.getCurrentSong.bind(this);
+    // this.getCurrentSong = this.getCurrentSong.bind(this);
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.getCurrentSong, 1000);
+    // this.interval = setInterval(this.getCurrentSong, 1000);
   }
 
   componentWillUnmount() {
@@ -59,7 +59,7 @@ class App extends Component {
       }
     }).then((data) => {
       this.setState({song: data});
-      console.log(data);
+      // console.log(data);
     });
   }
 
@@ -91,9 +91,9 @@ class App extends Component {
       </Router>
 
 
-        <div className = "playerStyle">
+        {/* <div className = "playerStyle">
           <Player {...this.state.song}/>
-        </div>
+        </div> */}
       </Grid>
     );
   }

@@ -15,8 +15,12 @@ export default class MusicPlayer extends Component {
     super(props);
   }
 
-  render() {
+  build(){
     const songProgress = (this.props.time / this.props.duration) * 100;
+
+    if (this.props.title == undefined) {
+      return (<div></div>);
+    }
 
     return (
       <Card>
@@ -31,18 +35,14 @@ export default class MusicPlayer extends Component {
             <Typography color="textSecondary" variant="subtitle1">
               {this.props.artist}
             </Typography>
-            <div>
-              <IconButton>
-                {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
-              </IconButton>
-              <IconButton>
-                <SkipNextIcon />
-              </IconButton>
-            </div>
           </Grid>
         </Grid>
         <LinearProgress variant="determinate" value={songProgress} />
       </Card>
     );
+  }
+  
+  render() {
+    return this.build();  
   }
 }
