@@ -7,24 +7,14 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 
 
-async function getContent() {
-    try{
-       const response = await fetch('/spotify/recibofy')
-       return response.json()
-    }catch(error){
-        console.log("DEU RUIM")
-    }
-  }
-
-  
-
 export default function ReciboFy() {
     // let title = " ReciboFy ";
     const [title, setTitle] = useState("Recibofy");
     const [data, setData] = useState([]);
     const loadData = async () => {
         try{
-            let response = await fetch('/spotify/recibofy');
+            // await fetch('/spotify/top-tracks?limit=3');
+            let response = await fetch('/spotify/top-tracks');
             response = response.json().then(data => setData(data));
         }catch(error){
             console.log("deu ruim")
@@ -49,7 +39,7 @@ export default function ReciboFy() {
             
             <React.Fragment>
                 {/* <CssBaseline /> */}
-                {dados.map((teste,index)=> <Card data={data[index]}/>)}
+                {dados.map((teste,index)=> <Card data={data[index]} key = {index}/>)}
                
             </React.Fragment>
         );
@@ -61,7 +51,7 @@ export default function ReciboFy() {
     <h1 className="styleTitle"></h1>
 
         <Grid style={{marginTop: 10}}>
-        <Typography component="div" style={{ backgroundColor: '#003656', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "90vh"}}>
+        <Typography component="div" style={{ backgroundColor: '#003656', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "85vh"}}>
         <Typography variant="h2" component="h2">
         {title}
         </Typography>

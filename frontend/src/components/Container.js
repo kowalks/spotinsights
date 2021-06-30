@@ -45,7 +45,7 @@ export default function ComplexGrid(props) {
         <Grid container spacing={2}>
           <Grid item>
             <ButtonBase className={classes.image}>
-              <img className={classes.img} alt="complex" src="https://material-ui.com/static/images/grid/complex.jpg" />
+              <img className={classes.img} alt="complex" src={props.data.img} />
             </ButtonBase>
           </Grid>
           <Grid item xs={12} sm container>
@@ -62,7 +62,7 @@ export default function ComplexGrid(props) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                <Typography variant="body2">
                   {min}:{sec}
                 </Typography>
               </Grid>
@@ -72,6 +72,7 @@ export default function ComplexGrid(props) {
             </Grid>
           </Grid>
         </Grid>
+        <img className={classes.img} alt="complex" src={props.data.qrcode} />
       </Paper>
     </div>
   );

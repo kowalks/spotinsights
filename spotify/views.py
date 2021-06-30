@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .credentials import *
 from requests import post
 from .util import *
-from math import floor
+import base64
 
 
 class AuthURL(APIView):
@@ -119,41 +119,19 @@ class CurrentSong(APIView):
 
 class TopTracks(APIView):
     def get(self, request, format=None):
+        limit = request.GET.get('limit', 20)
+
         endpoint = 'me/top/tracks'
 
         if not request.session.exists(request.session.session_key):
             request.session.create()
 
-        response = spotify_api_request(request.session.session_key, endpoint)
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
 
         if 'error' in response or 'items' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         items = response.get('items')
-
-        top_tracks = []
-
-        for song in items:
-            name = song.get('name')
-            top_tracks.append(name)
-
-        return Response(top_tracks, status=status.HTTP_200_OK)
-
-
-class Recibofy(APIView):
-    def get(self, request, format=None):
-        endpoint = 'me/top/tracks'
-
-        if not request.session.exists(request.session.session_key):
-            request.session.create()
-
-        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': '5'})
-
-        if 'error' in response or 'items' not in response:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        items = response.get('items')
-
         tracks = []
 
         for i, song in enumerate(items):
@@ -162,9 +140,18 @@ class Recibofy(APIView):
             position = i+1
             rating = song.get('popularity')
             duration = song.get('duration_ms')
-            minutes = floor(duration / 60000)
-            sec = floor((duration % 60000) / 1000)
-            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=minutes, sec=sec))
+            min, sec = ms_to_min_sec(duration)
+            uri = song.get('uri')
+            qrcode = f'https://scannables.scdn.co/uri/plain/jpeg/000000/white/640/{uri}'
+            img = song.get('album').get('images')[0].get('url')
+            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
+
+        return Response(tracks, status=status.HTTP_200_OK)
+
+
+class Recibofy(APIView):
+    def post(self, request, format=None):
+        tracks = TopTracks.get(self, request).data
 
         # User info
         endpoint = 'me/'
@@ -172,8 +159,33 @@ class Recibofy(APIView):
 
         # Create playlist
         endpoint = f'users/{user_id}/playlists'
-        response = spotify_api_request(request.session.session_key, endpoint, is_post=True)
+        playlist = spotify_api_request(request.session.session_key, endpoint, is_post=True, extra={
+            'name': 'SpotInsights Hits',
+            'description': 'Suas músicas mais ouvidas em 2021.',
+            'public': False
+        })
 
-        return Response(tracks, status=status.HTTP_200_OK)
+        playlist_id = playlist.get('id')
+        playlist_uri = playlist.get('uri')
+        
+        # Upload custom image
+        endpoint = f'playlists/{playlist_id}/images'
+        with open('spotify/assets/cover_500.jpg', 'rb') as img:
+            encoded = base64.b64encode(img.read())
+            spotify_api_request(request.session.session_key, endpoint, is_put=True, extra=encoded)
 
+        
+        # Add itens to playlist
+        endpoint = f'playlists/{playlist_id}/tracks'
+        spotify_api_request(request.session.session_key, endpoint, is_post=True, extra={
+            'uris': [item['uri'] for item in tracks]
+        })
+
+        # Defining response 
+        response = {
+            'tracks': tracks,
+            'qrcode': f'https://scannables.scdn.co/uri/plain/jpeg/000000/white/640/{playlist_uri}'
+        }
+
+        return Response(response, status=status.HTTP_200_OK)
 
