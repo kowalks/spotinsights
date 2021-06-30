@@ -6,16 +6,18 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import StarIcon from '@material-ui/icons/Star';
 
+import {FlipCard, Cont} from '../pages/ReciboFy/flip'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     margin: 5,
   },
   paper: {
-    padding: theme.spacing(2),
-    margin: 'auto',
+    margin: 5,
     maxWidth: 500,
-    backgroundColor: "#424242",
+    position: "relative",
+    backgroundColor: "#5160B9",
   },
   image: {
     width: 128,
@@ -23,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
   img: {
     margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  qrcode: {
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
@@ -40,21 +47,22 @@ export default function ComplexGrid(props) {
     sec = "0" + sec;
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Grid container spacing={2}>
+    <React.Fragment>
+      <Paper className={classes.paper} >
+      <FlipCard style={{padding: "16px", backgroundColor: "white"}}>
+        <Grid container spacing={2} className="front">
           <Grid item>
             <ButtonBase className={classes.image}>
-              <img className={classes.img} alt="complex" src={props.data.img} />
+              <img className={classes.img} style={{borderRadius: 5}} alt="complex" src={props.data.img} />
             </ButtonBase>
           </Grid>
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="subtitle1">
+                <Typography gutterBottom variant="colorTextPrimary" color="textPrimary">
                   {props.data.name}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="body2" color="textSecondary" gutterBottom>
                   {props.data.artists}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -62,7 +70,7 @@ export default function ComplexGrid(props) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2">
+                <Typography variant="body2" color="textSecondary">
                   {min}:{sec}
                 </Typography>
               </Grid>
@@ -72,8 +80,11 @@ export default function ComplexGrid(props) {
             </Grid>
           </Grid>
         </Grid>
-        <img className={classes.img} alt="complex" src={props.data.qrcode} />
+        <Grid className = "back">
+          <img className={classes.qrcode} style={{borderRadius: 200}} alt="complex" src={props.data.qrcode} />
+        </Grid>
+      </FlipCard>
       </Paper>
-    </div>
+    </React.Fragment>
   );
 }

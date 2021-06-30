@@ -5,7 +5,7 @@ import Player from "./Player";
 
 import '../global.css';
 import Header from './Header';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {HashRouter as Router, Route} from 'react-router-dom';
 import LandingPage from '../pages/LandingPage';
 import SpotStats from '../pages/SpotStats';
 import FeatPath from '../pages/FeatPath';
