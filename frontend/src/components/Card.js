@@ -9,9 +9,6 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    // direction: "column",
-    alignItems: "center",
-    justifyContent: 'space-between',
     borderRadius: '30px',
     width: 250,
     height: 400,
@@ -19,8 +16,13 @@ const useStyles = makeStyles({
     margin: '20px 20px',
     background: 'linear-gradient(to top, #003656 0%, #003656 40%, #ffc300 40%, #ffc300 100%)',
   },
+  content: {
+    direction: "column",
+    alignItems: "center",
+    justifyContent: 'space-between',
+  },
   string: {
-    fontSize: 24,
+    fontSize: 20,
   },
   title: {
     fontSize: 36,
@@ -31,10 +33,10 @@ const useStyles = makeStyles({
     marginBottom: 12,
   },
   media: {
-    height: 140,
+    height: 100,
     marginTop: 10,
     marginBottom: 10,
-    width: 140,
+    width: 100,
   },
   button: {
     // MarginBottom: 100,
@@ -46,7 +48,7 @@ export default function SimpleCard(props) {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
-      <CardContent>
+      <CardContent className={classes.content}>
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           {props.title}
         </Typography>
@@ -60,7 +62,7 @@ export default function SimpleCard(props) {
         </Typography>
       </CardContent>
       <CardActions className = {classes.button} >
-        <Button size="small">Learn More</Button>
+        <Button className = {classes.button}size="small">Saiba Mais</Button>
       </CardActions>
     </Card>
   );
