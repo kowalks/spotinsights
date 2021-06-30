@@ -1,7 +1,7 @@
 
 # SpotInsights
 
-Esse é um porjeto para a disciplina CES-22.
+Esse é um projeto para a disciplina CES-22.
 
 
 
