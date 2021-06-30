@@ -59,7 +59,7 @@ export default function ComplexGrid(props) {
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="colorTextPrimary" color="textPrimary">
+                <Typography gutterBottom variant="overline" color="textPrimary">
                   {props.data.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
