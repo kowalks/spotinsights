@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -29,9 +30,11 @@ const useStyles = makeStyles({
   pos: {
     marginBottom: 12,
   },
-  img: {
+  media: {
+    height: 140,
     marginTop: 10,
     marginBottom: 10,
+    width: 140,
   },
   button: {
     // MarginBottom: 100,
@@ -47,9 +50,11 @@ export default function SimpleCard(props) {
         <Typography className={classes.title} color="textPrimary" gutterBottom>
           {props.title}
         </Typography>
-        <Typography className={classes.img} color="textPrimary" gutterBottom>
-          {props.img}
-        </Typography>
+        <CardMedia
+          className={classes.media}
+          image={props.img}
+          title="Contemplative Reptile"
+        />
         <Typography variant="body2" component="p" className = {classes.string}>
           {props.string}
         </Typography>

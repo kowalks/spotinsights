@@ -21,7 +21,7 @@ const LandingPage = () =>{
         </Typography>
      </Grid>
      <Grid container direction="row" justify="center" alignItems="flex-end">
-     <Card title = "Spotstats" string = "Verifique sua estátistica musical em tempo real!" img="[Inserir Imagem]"/>
+     <Card title = "Spotstats" string = "Verifique sua estátistica musical em tempo real!" img= "../../Images/chart-icon.png"/>
      <Card title = "Recibofy" string = "Compartilhe seus resultados de uma forma criativa!" img="[Inserir Imagem]"/>
      <Card title = "FeatPath" string = "Crie Playlists Personalizadas Linkando artistas!" img="[Inserir Imagem]"/>
     </Grid>

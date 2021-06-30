@@ -21,7 +21,7 @@ export default function SpotStats() {
                 yType={'ordinal'}
                 width={450}
                 height={300}>
-                <HorizontalBarSeries
+                <HorizontalBarSeries 
                   data={myData}
                   onValueMouseOver={(d) => {console.log(d);}} 
                   colorType="literal"/>
