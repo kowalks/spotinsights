@@ -14,14 +14,22 @@ const useStyles = makeStyles({
     height: 400,
     minWidth: 275,
     margin: '20px 20px',
+    position: 'relative',
     background: 'linear-gradient(to top, #003656 0%, #003656 40%, #ffc300 40%, #ffc300 100%)',
   },
   content: {
+    position: 'relative',
     direction: "column",
     alignItems: "center",
     justifyContent: 'space-between',
+    height: 350,
   },
   string: {
+    minWidth: 200,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    position: 'absolute',
+    top: '70%',
     fontSize: 20,
   },
   title: {
@@ -40,7 +48,10 @@ const useStyles = makeStyles({
   },
   button: {
     // MarginBottom: 100,
-    FontColor: '#003656',
+    position: 'absolute',
+    bottom: 0,
+    FontColor: '#cee1e1',
+    maxWidth: '100%', 
   }
 });
 
@@ -62,7 +73,7 @@ export default function SimpleCard(props) {
         </Typography>
       </CardContent>
       <CardActions className = {classes.button} >
-        <Button className = {classes.button}size="small">Saiba Mais</Button>
+        <Button style = {{color: '#cee1e1'}} size="xl">Saiba Mais</Button>
       </CardActions>
     </Card>
   );
