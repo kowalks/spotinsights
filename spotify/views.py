@@ -94,8 +94,9 @@ class CurrentSong(APIView):
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         item = response.get('item')
-
+        id = item.get('artists')[0].get('id')
         artists = artists_string(item.get('artists'))
+
 
         duration = item.get('duration_ms')
         min = floor(duration/60000)
@@ -111,7 +112,8 @@ class CurrentSong(APIView):
             'song_id': item.get('id'),
             'popularity': item.get('popularity'),
             'min': min,
-            'sec': sec
+            'sec': sec,
+            'id': id,
         }
 
         return Response(song, status=status.HTTP_200_OK)
@@ -189,3 +191,31 @@ class Recibofy(APIView):
 
         return Response(response, status=status.HTTP_200_OK)
 
+class TopArtists(APIView):
+    def get(self, request, format=None):
+        limit = request.GET.get('limit', 10)
+
+        endpoint = 'me/top/artists'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        artists = []
+
+        for i, artist in enumerate(items):
+            name = artist.get('name')
+            #genres = get_genres(artist.get('genres'))
+            position = i+1
+            rating = artist.get('popularity')
+            artist_id = artist.get('id')
+            #incluir genres
+            artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id))
+
+        return Response(artists, status=status.HTTP_200_OK)
