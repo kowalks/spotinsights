@@ -1,21 +1,65 @@
-import React from 'react';
-
+import React, {useEffect, useState} from 'react';
 import './styles.css';
+import Card from "../../components/Container";
+import {Grid} from "@material-ui/core";
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+
 
 export default function ReciboFy() {
-    return(
-        <div className="textContainer"><h1 className="styleTitle"> ReciboFy </h1>
+    // let title = " ReciboFy ";
+    const [title, setTitle] = useState("Recibofy");
+    const [data, setData] = useState([]);
+    const loadData = async () => {
+        try{
+            // await fetch('/spotify/top-tracks?limit=3');
+            let response = await fetch('/spotify/top-tracks');
+            response = response.json().then(data => setData(data));
+        }catch(error){
+            console.log("deu ruim")
+        }
+
+        // await fetch('/spotify/recibofy').then(response => response.json()).catch( (error) => {console.log("deu ruim")}).then(data => setData(data));
+    }
+    useEffect( () => {
+        loadData();
+        console.log("call")
+    }, []);
+
+    const list = (dados) => {
         
-        <p>
+        if(dados.length == 0 || dados.length == undefined){
+            return <h1>Carregando.</h1>
+        }
+        // console.log(data[0].name)
+        console.log("entrou");
+        console.log(data);
+        return(
+            
+            <React.Fragment>
+                {/* <CssBaseline /> */}
+                {dados.map((teste,index)=> <Card data={data[index]} key = {index}/>)}
+               
+            </React.Fragment>
+        );
+    }
 
-        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+    console.log(data);
+    return(
+        <Container maxWidth="xl">
+    <h1 className="styleTitle"></h1>
 
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+        <Grid style={{marginTop: 10}}>
+        <Typography component="div" style={{ backgroundColor: '#003656', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "85vh"}}>
+        <Typography variant="h2" component="h2">
+        {title}
+        </Typography>
+        {list(data)}
 
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+        </Typography>
+        </Grid>
+        </Container>
 
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-        </p>
-        </div>
     );
 }
