@@ -142,7 +142,9 @@ class TopTracks(APIView):
             duration = song.get('duration_ms')
             min, sec = ms_to_min_sec(duration)
             uri = song.get('uri')
-            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri))
+            qrcode = f'https://scannables.scdn.co/uri/plain/jpeg/000000/white/640/{uri}'
+            img = song.get('album').get('images')[0].get('url')
+            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
 
         return Response(tracks, status=status.HTTP_200_OK)
 

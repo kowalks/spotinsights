@@ -3,6 +3,18 @@ import { Grid, Button, Typography } from "@material-ui/core";
 import { render } from "react-dom";
 import Player from "./Player";
 
+import '../global.css';
+import Header from './Header';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import LandingPage from '../pages/LandingPage';
+import SpotStats from '../pages/SpotStats';
+import FeatPath from '../pages/FeatPath';
+import ReciboFy from '../pages/ReciboFy';
+import NavigationBar from './NavigationBar';
+import Paper from '@material-ui/core/Paper';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -12,11 +24,11 @@ class App extends Component {
     };
 
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
-    this.getCurrentSong = this.getCurrentSong.bind(this);
+    // this.getCurrentSong = this.getCurrentSong.bind(this);
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.getCurrentSong, 1000);
+    // this.interval = setInterval(this.getCurrentSong, 1000);
   }
 
   componentWillUnmount() {
@@ -47,31 +59,46 @@ class App extends Component {
       }
     }).then((data) => {
       this.setState({song: data});
-      console.log(data);
+      // console.log(data);
     });
   }
 
   render() {
     return(
-      <Grid container spacing={1}>
-        <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
-            SpotInsights
-          </Typography>
-        </Grid>
-        <Grid item xs={12} align="center">
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={this.authenticateSpotify}>
-            Log In
-          </Button>
-        </Grid>
-        <Player {...this.state.song} />
+      <Grid item xs={12} align="center">
+      
+      <Router>
+        <NavigationBar bf ={this.authenticateSpotify} />
+ 
+        <Route exact path = '/'>      
+
+          <LandingPage {...this.state.song}/>
+
+        </Route>
+
+        <Route exact path = '/spotStats'>
+          <SpotStats/>
+        </Route>
+
+        <Route exact path = '/reciboFy'>
+          <ReciboFy/>
+        </Route>
+
+        <Route exact path = '/featPath'>
+          <FeatPath/>
+        </Route>
+
+      </Router>
+
+
+        {/* <div className = "playerStyle">
+          <Player {...this.state.song}/>
+        </div> */}
       </Grid>
     );
   }
 }
+
 
 export default App;
 
