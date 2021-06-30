@@ -108,6 +108,7 @@ def ms_to_min_sec(duration_ms):
 
     return min, sec
 
+
 def get_genres(genres):
     str = ''
     for genre in genres:
