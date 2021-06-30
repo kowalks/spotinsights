@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,7 +8,7 @@ import Drawer from './Drawer'
 import '../css/NavigationBar.css';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -22,19 +22,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function ButtonAppBar(props) {
   const classes = useStyles();
+
+  const [logged, setData] = useState(false);
+  const check_Log = async () => {
+    try{
+      let response = await fetch('/spotify/is-authenticated')
+      return response.json()
+    }catch(error){
+      console.log("Error to check log");
+    }
+  }
+
+  useEffect( () => {
+    if(logged == false || logged == undefined){
+      check_Log().then((data) => setData(data.status));
+    }
+  }, [logged]);
+
+
+  const setButton = () => {
+    if(logged == true){
+     return(
+      <Typography variant="h6" className={classes.title}>
+        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
+        <AccountCircleIcon className="LoginStyle" color="action" style={{ fontSize: 60 }}/>
+      </Typography>
+
+     ); 
+    }
+
+    return(
+      <Typography variant="h6" className={classes.title}>
+        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
+        <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
+          Log In
+        </Button>
+      </Typography>
+    );
+  }
+
+
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <Drawer />
-          <Typography variant="h6" className={classes.title}>
-            <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
-      <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
-      Log In
-      </Button>
-          </Typography>
+          {setButton()}
         </Toolbar>
       </AppBar>
     </div>
