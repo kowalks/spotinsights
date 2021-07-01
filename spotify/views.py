@@ -189,3 +189,17 @@ class Recibofy(APIView):
 
         return Response(response, status=status.HTTP_200_OK)
 
+
+class UserProfileImage(APIView):
+    def get(self, request, format=None):
+
+        # User info
+        endpoint = 'me/'
+        user_id = spotify_api_request(request.session.session_key, endpoint).get('id')
+        
+        # Upload custom image
+        endpoint = f'users/{user_id}'
+        image = spotify_api_request(request.session.session_key, endpoint).get('images')
+
+        return Response(image, status=status.HTTP_200_OK)
+
