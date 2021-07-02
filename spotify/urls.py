@@ -9,4 +9,5 @@ urlpatterns = [
     path('top-tracks', TopTracks.as_view()),
     path('recibofy', Recibofy.as_view()),
     path('profileimage', UserProfileImage.as_view()),
+    path('top-artist', TopArtists.as_view()),
 ]

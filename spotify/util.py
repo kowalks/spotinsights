@@ -107,3 +107,11 @@ def ms_to_min_sec(duration_ms):
     sec = floor((duration_ms % 60000) / 1000)
 
     return min, sec
+
+
+def get_genres(genres):
+    str = ''
+    for genre in genres:
+        str += genre
+        str += ' '
+    return str
