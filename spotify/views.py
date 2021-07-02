@@ -229,7 +229,8 @@ class TopArtists(APIView):
             position = i+1
             rating = artist.get('popularity')
             artist_id = artist.get('id')
+            img = artist.get('images')[0].get('url')
             #incluir genres
-            artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id))
+            artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id,img=img))
 
         return Response(artists, status=status.HTTP_200_OK)

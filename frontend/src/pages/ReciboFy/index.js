@@ -48,13 +48,13 @@ export default function ReciboFy() {
     <h1 className="styleTitle"></h1>
 
         <Grid style={{marginTop: 10}}>
-        <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "85vh"}}>
-        <Typography variant="h2" component="h2">
-        {title}
-        </Typography>
-        {list(data)}
+            <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "85vh"}}>
+                <Typography variant="h2" component="h2">
+                {title}
+                </Typography>
+                {list(data)}
 
-        </Typography>
+            </Typography>
         </Grid>
         </Container>
 

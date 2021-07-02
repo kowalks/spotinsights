@@ -66,7 +66,7 @@ export default function SimpleCard(props) {
         <CardMedia
           className={classes.media}
           image={props.img}
-          title="Contemplative Reptile"
+          title={classes.title}
         />
         <Typography variant="body2" component="p" className = {classes.string}>
           {props.string}
