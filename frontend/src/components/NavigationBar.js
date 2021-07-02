@@ -27,6 +27,19 @@ export default function ButtonAppBar(props) {
   const classes = useStyles();
 
   const [logged, setData] = useState(false);
+  const [profilepic, setpic] = useState("");
+ 
+
+  const getPic = async () => {
+    try{
+      let response = await fetch('/spotify/profileimage')
+      return response.json()
+    }catch(error){
+      console.log("Error to get pic");
+    }
+  }
+
+
   const check_Log = async () => {
     try{
       let response = await fetch('/spotify/is-authenticated')
@@ -42,15 +55,21 @@ export default function ButtonAppBar(props) {
     }
   }, [logged]);
 
+  useEffect( () => {
+    if(profilepic == ""){
+      getPic().then((data) => setpic(data.url));
+    }
+  }, [profilepic]);
+
 
   const setButton = () => {
     if(logged == true){
+      if(profilepic != "")
+        return(
+        <img className="LoginStyle" style={{borderRadius: 200, maxWidth: 64}} alt="complex" src={profilepic} />
+          );
      return(
-      <Typography variant="h6" className={classes.title}>
-        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
         <AccountCircleIcon className="LoginStyle" color="action" style={{ fontSize: 60 }}/>
-      </Typography>
-
      ); 
     }
 
@@ -71,7 +90,10 @@ export default function ButtonAppBar(props) {
       <AppBar position="static">
         <Toolbar>
           <Drawer />
-          {setButton()}
+          <Typography variant="h6" className={classes.title}>
+            <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
+          </Typography>
+              {setButton()}
         </Toolbar>
       </AppBar>
     </div>
