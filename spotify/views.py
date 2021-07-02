@@ -199,7 +199,8 @@ class UserProfileImage(APIView):
         
         # Upload custom image
         endpoint = f'users/{user_id}'
-        image = spotify_api_request(request.session.session_key, endpoint).get('images')
+        image = spotify_api_request(request.session.session_key, endpoint).get('images')[0]['url']
+        image = {'url':image}
 
         return Response(image, status=status.HTTP_200_OK)
 
