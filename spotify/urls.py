@@ -10,5 +10,8 @@ urlpatterns = [
     path('recibofy', Recibofy.as_view()),
     path('profileimage', UserProfileImage.as_view()),
     path('top-artist', TopArtists.as_view()),
+    path('topgenres', TopGenres.as_view()),
+    path('userdevice', UserDevice.as_view()),
+    path('recommendations', Recommendations.as_view()),
     path('path-finder', PathFinder.as_view()),
 ]
