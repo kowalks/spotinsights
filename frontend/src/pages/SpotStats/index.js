@@ -11,6 +11,11 @@ import {XYPlot ,XAxis, YAxis, HorizontalGridLines,VerticalGridLines,VerticalBarS
 export default function SpotStats() {
     const [data, setData] = useState([]);
     let title = " SpotStats ";
+    const generalTypeData = [
+        {'label': 'Happy', 'value': '67'},
+        {'label':'Energy', 'value': '54'},
+        {'label':'Danceable', 'value': '45'},
+        {'label':'Acoustic', 'value': '34'}];
     const loadData = async () => {
         try{
             // await fetch('/spotify/top-tracks?limit=3');
@@ -19,7 +24,7 @@ export default function SpotStats() {
         }catch(error){
             console.log("deu ruim")
         }
-    }
+    };
     useEffect( () => {
         loadData();
     }, []);
@@ -53,6 +58,7 @@ export default function SpotStats() {
                 {list(data)}
             </Typography>
         </Grid>
+        <SongsChart data={generalTypeData}></SongsChart>
         </Container>
         );
 }
