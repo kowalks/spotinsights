@@ -142,11 +142,12 @@ class TopTracks(APIView):
             position = i+1
             rating = song.get('popularity')
             duration = song.get('duration_ms')
+            id = song.get('id')
             min, sec = ms_to_min_sec(duration)
             uri = song.get('uri')
             qrcode = f'https://scannables.scdn.co/uri/plain/jpeg/3F51B5/white/640/{uri}'
             img = song.get('album').get('images')[0].get('url')
-            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
+            tracks.append(dict(id=id,name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
 
         return Response(tracks, status=status.HTTP_200_OK)
 
@@ -239,8 +240,9 @@ class TopArtists(APIView):
             rating = artist.get('popularity')
             artist_id = artist.get('id')
             img = artist.get('images')[0].get('url')
-            #incluir genres
             artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id,img=img))
+
+        sponse = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
 
         return Response(artists, status=status.HTTP_200_OK)
 
@@ -410,4 +412,53 @@ class PathFinder(APIView):
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-            
+
+class AudioAnalysis(APIView):
+    def get(self, request, format=None):
+        limit = request.GET.get('limit', 10)
+        endpoint = 'me/top/tracks'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        ids = []
+        for i, track in enumerate(items):
+            ids += [track.get('id')]
+        infos = []
+        for id in ids:
+            new_endpoint = f'audio-features/{id}'
+            infos += [spotify_api_request(request.session.session_key, new_endpoint)]
+
+        danceability = 0
+        energy = 0
+        speechiness = 0
+        acousticness = 0
+        instrumentalness = 0
+        liveness = 0
+
+        for info in infos:
+            danceability += info.get('danceability')* 10
+            energy += info.get('energy') * 10
+            speechiness += info.get('speechiness') * 10
+            acousticness += info.get('acousticness') * 10
+            instrumentalness += info.get('instrumentalness') * 10
+            liveness += info.get('liveness') * 10
+        liveness = round(liveness, 2)
+        instrumentalness = round(instrumentalness, 2)
+        acousticness = round(acousticness, 2)
+        speechiness = round(speechiness, 2)
+        energy = round(energy, 2)
+        danceability = round(danceability, 2)
+        audio_data = dict(liveness=liveness, instrumentalness=instrumentalness,
+                          acousticness=acousticness, speechiness=speechiness,
+                          energy=energy, danceability=danceability)
+
+        return Response(audio_data, status=status.HTTP_200_OK)
+
