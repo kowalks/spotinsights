@@ -450,12 +450,12 @@ class AudioAnalysis(APIView):
             acousticness += info.get('acousticness') * 10
             instrumentalness += info.get('instrumentalness') * 10
             liveness += info.get('liveness') * 10
-        liveness = round(liveness, 2)
-        instrumentalness = round(instrumentalness, 2)
-        acousticness = round(acousticness, 2)
-        speechiness = round(speechiness, 2)
-        energy = round(energy, 2)
-        danceability = round(danceability, 2)
+        liveness = round(liveness)
+        instrumentalness = round(instrumentalness)
+        acousticness = round(acousticness)
+        speechiness = round(speechiness)
+        energy = round(energy)
+        danceability = round(danceability)
         audio_data = []
         audio_data.append(dict(label='liveness',value=liveness))
         audio_data.append(dict(label='instrumentalness', value=instrumentalness))
