@@ -456,9 +456,13 @@ class AudioAnalysis(APIView):
         speechiness = round(speechiness, 2)
         energy = round(energy, 2)
         danceability = round(danceability, 2)
-        audio_data = dict(liveness=liveness, instrumentalness=instrumentalness,
-                          acousticness=acousticness, speechiness=speechiness,
-                          energy=energy, danceability=danceability)
-
+        audio_data = []
+        audio_data.append(dict(label='liveness',value=liveness))
+        audio_data.append(dict(label='instrumentalness', value=instrumentalness))
+        audio_data.append(dict(label='acousticness', value=acousticness))
+        audio_data.append(dict(label='speechiness', value=speechiness))
+        audio_data.append(dict(label='energy', value=energy))
+        audio_data.append(dict(label='danceability', value=danceability))
+      
         return Response(audio_data, status=status.HTTP_200_OK)
 
