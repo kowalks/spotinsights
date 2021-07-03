@@ -95,7 +95,7 @@ class CurrentSong(APIView):
 
         item = response.get('item')
         id = item.get('artists')[0].get('id')
-        artists = artists_string(item.get('artists'))
+        artists = stringfy(item.get('artists'), lambda x: x.get('name'))
 
 
         duration = item.get('duration_ms')
@@ -238,3 +238,43 @@ class TopArtists(APIView):
         return Response(artists, status=status.HTTP_200_OK)
 
 
+class PathFinder(APIView):
+    def get(self, request, format=None):
+        start_id = request.GET.get('start_id')
+        end_id = request.GET.get('end_id')
+
+        if start_id == end_id:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        return PathFinder.BFS(request, start_id, end_id)
+
+    # Breadth-first search algorithm
+    def BFS(request, start_id, end_id):
+        endpoint = ''
+        queue = [start_id]
+        visited = []
+
+        while queue:
+            artist_id = queue.pop(0)
+            visited += [artist_id]
+
+            endpoint = f'artists/{artist_id}/albums'
+            albums = spotify_api_request(request.session.session_key, endpoint).get('items')
+
+            for album in albums:
+                album_id = album.get('id')
+                endpoint = f'albums/{album_id}'
+                tracks = spotify_api_request(request.session.session_key, endpoint).get('tracks').get('items')
+                for track in tracks:
+                    feats = track.get('artists')
+                    for feat in feats:
+                        feat_id = feat.get('id')
+                        if not feat_id in visited:
+                            if feat_id == end_id:
+                                return Response(feat, status=status.HTTP_200_OK)
+                            queue += [feat_id]
+
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+            
