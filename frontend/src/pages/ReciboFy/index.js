@@ -42,7 +42,6 @@ export default function ReciboFy() {
         );
     }
 
-    console.log(data);
     return(
         <Container maxWidth="xl">
     <h1 className="styleTitle"></h1>

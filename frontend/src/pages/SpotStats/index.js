@@ -34,7 +34,7 @@ export default function SpotStats() {
         loadData();
     }, []);
     const list = (dados) => {
-        console.log(dados);
+        // console.log(dados);
         if(dados.length == 0 || dados.length == undefined){
             return (
                 <h1>Carregando...</h1>
@@ -43,8 +43,8 @@ export default function SpotStats() {
 
         return(
             
-            <React.Fragment>
-                <GridList cellHeight={160} style={{maxWidth: 800}} cols={3}>
+            <React.Fragment >
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
                     {dados.map((teste,index)=> <ArtistCard data={data[index]} key = {index}/>)}
                 </GridList>
             </React.Fragment>

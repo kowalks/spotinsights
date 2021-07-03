@@ -37,7 +37,7 @@ const useStyles = makeStyles({
       fontSize: 20,
     },
     title: {
-      fontSize: 30,
+      fontSize: 25,
       marginTop: 10,
       marginBottom: 10,
     },
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
     const classes = useStyles();
     return (
         <FlipCard className={classes.root}>
-            <CardContent className="front "style={{height:"200px",width:"200px", padding:0}}>
+            <CardContent className="front "style={{height:"200px",width:"200px", padding:0 }}>
                 <CardMedia
                     className={classes.img}
                     image={props.data.img}
@@ -72,7 +72,9 @@ const useStyles = makeStyles({
                     #{props.data.position}
                 </Typography>
 
-                <Typography variant="subtitle1" style={{color:'white'}}><StarIcon/> {props.data.rating}</Typography>
+                <Typography variant="subtitle1" style={{color:'white'}}>
+                  <StarIcon/> {props.data.rating}
+                </Typography>
             </CardContent>
         </FlipCard>
       
