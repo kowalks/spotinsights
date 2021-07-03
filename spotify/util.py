@@ -92,18 +92,27 @@ def spotify_api_request(session_id, endpoint, is_post=False, is_put=False, extra
         return {'error': 'Problem with Spotify API request'}
 
 
-def artists_string(artists):
-    artists_str = ''
-    for i, artist in enumerate(artists):
-        if i > 0:
-            artists_str += ', '
-        name = artist.get('name')
-        artists_str += name
-    return artists_str
-
-
 def ms_to_min_sec(duration_ms):
     min = floor(duration_ms / 60000)
     sec = floor((duration_ms % 60000) / 1000)
 
     return min, sec
+
+
+# Não usar isso aqui, usar a função stringfy
+# def get_genres(genres):
+#     str = ''
+#     for genre in genres:
+#         str += genre
+#         str += ' '
+#     return str
+
+
+def stringfy(elements, get_item):
+    str = ''
+    for i, element in enumerate(elements):
+        if i > 0:
+            str += ', '
+        item = get_item(element)
+        str += item
+    return str

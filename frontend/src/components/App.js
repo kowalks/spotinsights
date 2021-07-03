@@ -75,7 +75,7 @@ class App extends Component {
 
   render() {
     return(
-      <Grid item xs={12} align="center">
+      <Grid item xs={12} align="center" style={{overflowY: "auto ", maxHeight: "100%"}}>
       
       <Router>
         <NavigationBar bf ={this.authenticateSpotify} />

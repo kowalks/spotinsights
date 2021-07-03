@@ -27,6 +27,8 @@ export default function ButtonAppBar(props) {
   const classes = useStyles();
 
   const [logged, setData] = useState(false);
+  const [metada, setMeta] = useState([]);
+ 
   const check_Log = async () => {
     try{
       let response = await fetch('/spotify/is-authenticated')
@@ -36,22 +38,26 @@ export default function ButtonAppBar(props) {
     }
   }
 
+  
   useEffect( () => {
     if(logged == false || logged == undefined){
-      check_Log().then((data) => setData(data.status));
+      check_Log().then((data) => {
+        setData(data.status)
+        setMeta(data.metadata)
+      });
     }
   }, [logged]);
 
-
   const setButton = () => {
     if(logged == true){
-     return(
-      <Typography variant="h6" className={classes.title}>
-        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
-        <AccountCircleIcon className="LoginStyle" color="action" style={{ fontSize: 60 }}/>
-      </Typography>
-
-     ); 
+        return(
+          <React.Fragment>
+            <Typography variant="h6" style={{marginRight: 10}}>
+              {metada.name}
+            </Typography>
+            <img className="LoginStyle" style={{borderRadius: 200, maxWidth: 48}} alt="complex" src={metada.profile} />
+          </React.Fragment>
+        );
     }
 
     return(
@@ -71,7 +77,10 @@ export default function ButtonAppBar(props) {
       <AppBar position="static">
         <Toolbar>
           <Drawer />
-          {setButton()}
+          <Typography variant="h6" className={classes.title}>
+            <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
+          </Typography>
+              {setButton()}
         </Toolbar>
       </AppBar>
     </div>

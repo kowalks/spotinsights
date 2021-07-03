@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import DialogButton from './DialogButton';
 
 const useStyles = makeStyles({
   root: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     bottom: 0,
     FontColor: '#cee1e1',
-    maxWidth: '100%', 
+    width: '100%', 
   }
 });
 
@@ -66,14 +67,15 @@ export default function SimpleCard(props) {
         <CardMedia
           className={classes.media}
           image={props.img}
-          title="Contemplative Reptile"
+          title={classes.title}
         />
         <Typography variant="body2" component="p" className = {classes.string}>
           {props.string}
         </Typography>
       </CardContent>
       <CardActions className = {classes.button} >
-        <Button style = {{color: '#cee1e1'}} size="xl">Saiba Mais</Button>
+        {/* <Button style = {{color: '#cee1e1'}} size="xl">Saiba Mais</Button> */}
+        <DialogButton style = {{width: '100%'}} title = {props.title} content = {props.longDescription}></DialogButton>
       </CardActions>
     </Card>
   );
