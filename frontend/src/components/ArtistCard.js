@@ -69,7 +69,7 @@ const useStyles = makeStyles({
                     {props.data.name}
                 </Typography>
                 <Typography variant="h3" component="p" className = {classes.string}>
-                    Position: {props.data.position}
+                    #{props.data.position}
                 </Typography>
 
                 <Typography variant="subtitle1"><StarIcon/> {props.data.rating}</Typography>
