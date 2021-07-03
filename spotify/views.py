@@ -78,7 +78,26 @@ def callback(request, format=None):
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         authenticated = is_authenticated(request.session.session_key)
-        return Response({'status': authenticated}, status=status.HTTP_200_OK)
+        if authenticated:
+            endpoint = 'me/'
+            user = spotify_api_request(request.session.session_key, endpoint)           
+            
+            metadata = {
+                'profile': user.get('images')[0].get('url'),
+                'name': user.get('display_name'),
+                'email': user.get('email'),
+                'country': user.get('country'),
+                'id': user.get('id')
+                }
+        else:
+            metadata = None
+
+        return Response(
+            {
+            'status': authenticated, 
+            'metadata': metadata
+            }, 
+            status=status.HTTP_200_OK)
 
 
 class CurrentSong(APIView):
