@@ -138,7 +138,7 @@ class TopTracks(APIView):
 
         for i, song in enumerate(items):
             name = song.get('name')
-            artists = artists_string(song.get('artists'))
+            artists = stringfy(song.get('artists'), lambda x: x.get('name'))
             position = i+1
             rating = song.get('popularity')
             duration = song.get('duration_ms')
@@ -206,6 +206,7 @@ class UserProfileImage(APIView):
 
         return Response(image, status=status.HTTP_200_OK)
 
+
 class TopArtists(APIView):
     def get(self, request, format=None):
         limit = request.GET.get('limit', 10)
@@ -235,3 +236,5 @@ class TopArtists(APIView):
             artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id,img=img))
 
         return Response(artists, status=status.HTTP_200_OK)
+
+
