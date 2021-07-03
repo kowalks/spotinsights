@@ -402,26 +402,34 @@ class PathFinder(APIView):
 
             endpoint = f'artists/{artist_id}/albums'
             albums = spotify_api_request(request.session.session_key, endpoint).get('items')
+            album_ids = ','.join([album.get('id') for album in albums])
+            endpoint = 'albums/'
+            albums = spotify_api_request(request.session.session_key, endpoint, extra={'ids': album_ids})
 
-            for album in albums:
-                album_id = album.get('id')
-                endpoint = f'albums/{album_id}'
-                tracks = spotify_api_request(request.session.session_key, endpoint).get('tracks').get('items')
-                for track in tracks:
-                    feats = track.get('artists')
-                    for feat in feats:
-                        feat_id = feat.get('id')
-                        print(feat.get('name'))
-                        if not feat_id in visited:
-                            visited[feat_id] = {
-                                'artist_id': feat_id,
-                                'artist_name': feat.get('name'),
-                                'parent_id': artist_id,
-                                'track': track.get('name')
-                            }
-                            if feat_id == end_id:
-                                return visited
-                            queue += [feat_id]
+            # return albums
+
+            tracks = []
+            for album in albums.get('albums'):
+                trks = album.get('tracks').get('items')
+                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
+            
+            # return tracks
+
+            for track in tracks:
+                feats = track.get('artists')
+                for feat in feats:
+                    feat_id = feat.get('id')
+                    print(feat.get('name'))
+                    if not feat_id in visited:
+                        visited[feat_id] = {
+                            'artist_id': feat_id,
+                            'artist_name': feat.get('name'),
+                            'parent_id': artist_id,
+                            'track': track.get('name')
+                        }
+                        if feat_id == end_id:
+                            return visited
+                        queue += [feat_id]
                             
 
     def collect_info(visited, start_id, end_id):
