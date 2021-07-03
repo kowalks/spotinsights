@@ -1,13 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+// import Grid from '@material-ui/core/Grid';
+// import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import StarIcon from '@material-ui/icons/Star';
-import Card from '@material-ui/core/Card';
+// import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 
 import {FlipCard, Cont} from '../pages/ReciboFy/flip'
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
       width: 200,
       height: 200,
     //   minWidth: 200,
-      margin: '20px 20px',
+      margin: '15px 15px',
       position: 'relative',
       background: 'black',
     },
@@ -72,7 +72,7 @@ const useStyles = makeStyles({
                     #{props.data.position}
                 </Typography>
 
-                <Typography variant="subtitle1"><StarIcon/> {props.data.rating}</Typography>
+                <Typography variant="subtitle1" style={{color:'white'}}><StarIcon/> {props.data.rating}</Typography>
             </CardContent>
         </FlipCard>
       

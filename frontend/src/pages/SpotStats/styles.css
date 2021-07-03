@@ -12,3 +12,17 @@
     background-color: black;
     width: 25px;
 }
+.style-title{
+    color: black;
+}
+.top-artists{
+    border-radius: 15px;
+    background-color: #5160b9;
+    border-radius: 14;
+    color: "white";
+    max-height: "85vh";
+    overflow-y: "auto "
+}
+.top-artists-title{
+    color: cornsilk;
+}

@@ -6,7 +6,7 @@ import ArtistCard from '../../components/ArtistCard';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
 import './styles.css';
-import {XYPlot ,XAxis, YAxis, HorizontalGridLines,VerticalGridLines,VerticalBarSeries,HorizontalBarSeries} from 'react-vis'
+// import {XYPlot ,XAxis, YAxis, HorizontalGridLines,VerticalGridLines,VerticalBarSeries,HorizontalBarSeries} from 'react-vis'
 
 export default function SpotStats() {
     const [data, setData] = useState([]);
@@ -39,7 +39,7 @@ export default function SpotStats() {
         return(
             
             <React.Fragment>
-                <GridList cellHeight={160} style={{width: 1000, height: 800}} cols={3}>
+                <GridList cellHeight={160} style={{maxWidth: 800}} cols={3}>
                     {dados.map((teste,index)=> <ArtistCard data={data[index]} key = {index}/>)}
                 </GridList>
             </React.Fragment>
@@ -47,18 +47,20 @@ export default function SpotStats() {
     }
     return(
         <Container maxWidth="xl">
-        <h1 className="styleTitle"></h1>
+        <h1 className="style-title">{title}</h1>
 
-        <Grid style={{marginTop: 10}} >
-            <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white", overflowY: "auto ", maxHeight: "85vh"}}>
-                <Typography variant="h2" component="h2">
-                {title}
-                </Typography>
-                <Typography variant="h3" component="h3"> Top Artistas </Typography>
+        <Grid style={{marginTop: 10, marginBottom:20}} >
+            <Typography component="div" className = "top-artists">
+                <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
                 {list(data)}
             </Typography>
         </Grid>
-        <SongsChart data={generalTypeData}></SongsChart>
+        <Grid style={{marginTop: 10, marginBottom:20}} >
+            <Typography component="div" className = "top-artists">
+                <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
+                <SongsChart data={generalTypeData}></SongsChart>
+            </Typography>
+        </Grid>
         </Container>
         );
 }
