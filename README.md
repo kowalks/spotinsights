@@ -86,3 +86,15 @@ real, executamos o comando em modo dev.
 | Query Parameter | Tipo     | Descrição                       |
 | :-------- | :------- | :-------------------------------- |
 | `limit`   | `inteiro`| _Opcional_. Número máximo de itens a serem exibidos|
+
+
+#### Feat Path entre dois artistas
+
+```http
+  GET /spotify/path-finder
+```
+
+| Query Parameter | Tipo     | Descrição                       |
+| :-------- | :------- | :-------------------------------- |
+| `start_id`   | `string`| _Obrigatório_. id do artista que começa a busca|
+| `end_id`   | `string`| _Obrigatório_. id do artista que termina a busca|
