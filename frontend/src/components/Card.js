@@ -75,7 +75,7 @@ export default function SimpleCard(props) {
       </CardContent>
       <CardActions className = {classes.button} >
         {/* <Button style = {{color: '#cee1e1'}} size="xl">Saiba Mais</Button> */}
-        <DialogButton style = {{width: '100%'}}title = {props.title}></DialogButton>
+        <DialogButton style = {{width: '100%'}} title = {props.title} content = {props.longDescription}></DialogButton>
       </CardActions>
     </Card>
   );

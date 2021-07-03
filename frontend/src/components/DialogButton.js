@@ -74,13 +74,13 @@ export default function CustomizedDialogs(props) {
         </DialogTitle>
         <DialogContent dividers >
           <Typography gutterBottom color = "textPrimary" >
-            To
+            {props.content}
           </Typography>
           <Typography gutterBottom color = "textPrimary">
-            dando
+          {props.content}
           </Typography>
           <Typography gutterBottom color = "textPrimary">
-            o gas
+          {props.content}
           </Typography>
         </DialogContent>
         <DialogActions>

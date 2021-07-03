@@ -22,9 +22,24 @@ const LandingPage = () =>{
         </Typography>
      </Grid>
      <Grid container direction="row" justify="center" alignItems="flex-end">
-            <Card title = "Spotstats" string = "Verifique sua estátistica musical em tempo real!" img= "../static/img/chart-icon.png"/>
-            <Card title = "Recibofy" string = "Compartilhe seus resultados de uma forma criativa!" img="../static/img/path-icon.png"/>
-            <Card title = "FeatPath" string = "Crie Playlists Personalizadas Linkando artistas!" img="../static/img/receipt-icon.png"/>
+            <Card 
+            title = "Spotstats"
+            string = "Verifique sua estátistica musical em tempo real!"
+            img= "../static/img/chart-icon.png"
+            longDescription = "Escrever descrição do SpotStats"
+              />
+            <Card 
+            title = "Receiptfy" 
+            string = "Compartilhe seus resultados de uma forma criativa!" 
+            img="../static/img/path-icon.png"
+            longDescription = "Escrever descrição do Receiptfy"
+            />
+            <Card 
+            title = "FeatPath" 
+            string = "Crie Playlists Personalizadas Linkando artistas!" 
+            img="../static/img/receipt-icon.png"
+            longDescription = "Escrever descrição do FeatPath"
+            />
         </Grid>
     </Container>
         
