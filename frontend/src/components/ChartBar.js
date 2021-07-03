@@ -22,11 +22,12 @@ const ChartBar = props => {
   // const onHover = () => {labelBar =>  (barFillHeight);console.log(labelBar)};
   // const onNoHover = () => {labelBar => setData(props.label)};
     return (
-        <div className='chart-bar'>
+        <div className='chart-bar'
+        onMouseOver = {changeLabel}
+        onMouseOut = {resetLabel}
+        >
           <div className='chart-bar__inner'>
             <div
-              onMouseOver = {changeLabel}
-              onMouseOut = {resetLabel}
               className='chart-bar__fill'
               style={{ height: barFillHeight }}
             ></div>

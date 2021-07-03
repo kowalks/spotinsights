@@ -6,26 +6,26 @@ import ArtistCard from '../../components/ArtistCard';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
 import './styles.css';
-// import {XYPlot ,XAxis, YAxis, HorizontalGridLines,VerticalGridLines,VerticalBarSeries,HorizontalBarSeries} from 'react-vis'
 
 export default function SpotStats() {
     const [data, setData] = useState([]);
+    const [generalTypeData,setGeneralTypeData] = useState([]);
+    //  const generalTypeData = [
+    //     {'label': 'Happy', 'value': '67'},
+    //     {'label':'Energy', 'value': '54'},
+    //     {'label':'Danceable', 'value': '45'},
+    //     {'label':'Acoustic', 'value': '34'},
+    //     {'label':'Speech', 'value': '80'},
+    //     {'label':'Instrumental', 'value': '12'},
+    //     {'label':'Life', 'value': '60'}
+    //     ];
     let title = " SpotStats ";
-    const generalTypeData = 
-        [
-        {'label': 'Happy', 'value': '67'},
-        {'label':'Energy', 'value': '54'},
-        {'label':'Danceable', 'value': '45'},
-        {'label':'Acoustic', 'value': '34'},
-        {'label':'Speech', 'value': '80'},
-        {'label':'Instrumental', 'value': '12'},
-        {'label':'Life', 'value': '60'}
-        ];
     const loadData = async () => {
         try{
-            // await fetch('/spotify/top-tracks?limit=3');
-            let response = await fetch('/spotify/top-artist');
-            response = response.json().then(data => setData(data));
+            let artistResponse = await fetch('/spotify/top-artist');
+            let generalDataResponse = await fetch('/spotify/audio-data');
+            generalDataResponse = generalDataResponse.json().then(generalTypeData => setGeneralTypeData(generalTypeData));
+            artistResponse = artistResponse.json().then(data => setData(data));
         }catch(error){
             console.log("deu ruim")
         }
@@ -34,7 +34,7 @@ export default function SpotStats() {
         loadData();
     }, []);
     const list = (dados) => {
-        
+        // console.log(dados);
         if(dados.length == 0 || dados.length == undefined){
             return (
                 <h1>Carregando...</h1>
@@ -43,8 +43,8 @@ export default function SpotStats() {
 
         return(
             
-            <React.Fragment>
-                <GridList cellHeight={160} style={{maxWidth: 800}} cols={3}>
+            <React.Fragment >
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
                     {dados.map((teste,index)=> <ArtistCard data={data[index]} key = {index}/>)}
                 </GridList>
             </React.Fragment>
@@ -69,3 +69,5 @@ export default function SpotStats() {
         </Container>
         );
 }
+
+   
