@@ -192,19 +192,26 @@ class Recibofy(APIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
-class UserProfileImage(APIView):
+class UserProfileImage(APIView):       #puxa a foto de perfil do usuário
     def get(self, request, format=None):
 
-        # User info
         endpoint = 'me/'
         user_id = spotify_api_request(request.session.session_key, endpoint).get('id')
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint)
+
+        if 'error' in response or 'images' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
         
-        # Upload custom image
         endpoint = f'users/{user_id}'
         image = spotify_api_request(request.session.session_key, endpoint).get('images')[0]['url']
         image = {'url':image}
 
         return Response(image, status=status.HTTP_200_OK)
+                 
 
 class TopArtists(APIView):
     def get(self, request, format=None):
@@ -235,3 +242,131 @@ class TopArtists(APIView):
             artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id,img=img))
 
         return Response(artists, status=status.HTTP_200_OK)
+
+
+
+##########################brainstorms
+
+
+class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artistas
+    def get(self, request, format=None):
+        limit = request.GET.get('limit', 3)
+
+        endpoint = 'me/top/artists'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        genres = []
+
+        for i in range(0, len(items)):
+            for j in range(0, len(items[i]['genres'])):
+                genres.append(items[i]['genres'][j]) #retorna um lista com os gêneros mais tops
+        
+        genres = {'genres': genres}
+
+        return Response(genres, status=status.HTTP_200_OK)
+
+
+class UserDevice(APIView):        #retorna as infos como id, is_active, name (e.g. Android), type (e.g. Smartphone)
+    def get(self, request, format=None):  #retorna as infos APENAS se o usuário está usando o app
+
+        endpoint = 'me/player/devices'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint)
+
+        if 'error' in response or 'devices' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        device_info = response.get('devices')
+
+        return Response(device_info, status=status.HTTP_200_OK)
+
+
+class Recommendations(APIView):                #faz 3 recomendações a partir dos ids dos top artistas e top generos
+    def get(self, request, format=None):
+
+        ################################
+        #pegando os ids dos top artistas
+        limit = request.GET.get('limit', 10)
+        endpoint = 'me/top/artists'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        seed_artists = []
+
+        for i, artist in enumerate(items):
+            artist_id = artist.get('id')
+            seed_artists.append(str(artist_id))
+
+
+        #######################
+        #pegando os top gêneros
+        limit = request.GET.get('limit', 5)
+        endpoint = 'me/top/artists'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        seed_genres = []
+
+        for i in range(0, len(items)):
+            for j in range(0, len(items[i]['genres'])):
+                seed_genres.append(items[i]['genres'][j])
+        
+        print(seed_genres)
+        print(seed_artists)
+
+
+        #########################
+        #pegando as recomendações
+        limit = request.GET.get('limit', 3)
+        endpoint = 'recommendations'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit, 'seed_artists': seed_artists, 'seed_genres': seed_genres})
+
+        if 'error' in response or 'tracks' not in response:
+            return Response({"oi"}, status=status.HTTP_204_NO_CONTENT)
+
+        recommendations = []
+        
+        for i in range(0, len(response.get('tracks'))):
+            recommendations.append({
+                'name': response.get('tracks')[i]['name'],
+                'artist': response.get('tracks')[i]['artists'],
+                'album': response.get('tracks')[i]['album']['images'],
+            })
+        
+
+        return Response(recommendations, status=status.HTTP_200_OK)
+
+        
+
