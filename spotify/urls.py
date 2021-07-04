@@ -15,4 +15,5 @@ urlpatterns = [
     path('recommendations', Recommendations.as_view()),
     path('path-finder', PathFinder.as_view()),
     path('history', History.as_view()),
+    path('audio-data', AudioAnalysis.as_view()),
 ]

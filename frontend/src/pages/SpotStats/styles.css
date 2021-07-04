@@ -1,14 +1,19 @@
-.algo{
-    background-color: coral;
+
+.style-title{
+    color: black;
 }
-.vertical-bar-series-plot{
-    margin-left: 100px;
-    margin-top: 150px;
-    background-color: coral;
-    /* width: 300px;
-    height: 300px; */
+.stats-component{
+    border-radius: 15px;
+    background-color: #5160b9;
+    border-radius: 14;
+    /* color: "white"; */
+    max-height: "85vh";
+    overflow-y: "auto "
 }
-.vertical-bar-series-bar {
-    background-color: black;
-    width: 25px;
+.top-artists-title{
+    color: cornsilk;
+}
+.genre-content{
+    color: cornsilk;
+    font-weight: 800;
 }

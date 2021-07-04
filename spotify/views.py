@@ -78,7 +78,26 @@ def callback(request, format=None):
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         authenticated = is_authenticated(request.session.session_key)
-        return Response({'status': authenticated}, status=status.HTTP_200_OK)
+        if authenticated:
+            endpoint = 'me/'
+            user = spotify_api_request(request.session.session_key, endpoint)           
+            
+            metadata = {
+                'profile': user.get('images')[0].get('url'),
+                'name': user.get('display_name'),
+                'email': user.get('email'),
+                'country': user.get('country'),
+                'id': user.get('id')
+                }
+        else:
+            metadata = None
+
+        return Response(
+            {
+            'status': authenticated, 
+            'metadata': metadata
+            }, 
+            status=status.HTTP_200_OK)
 
 
 class CurrentSong(APIView):
@@ -142,11 +161,12 @@ class TopTracks(APIView):
             position = i+1
             rating = song.get('popularity')
             duration = song.get('duration_ms')
+            id = song.get('id')
             min, sec = ms_to_min_sec(duration)
             uri = song.get('uri')
             qrcode = f'https://scannables.scdn.co/uri/plain/jpeg/3F51B5/white/640/{uri}'
             img = song.get('album').get('images')[0].get('url')
-            tracks.append(dict(name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
+            tracks.append(dict(id=id,name=name, artists=artists, position=position, rating=rating, min=min, sec=sec, uri=uri, qrcode=qrcode, img=img))
 
         return Response(tracks, status=status.HTTP_200_OK)
 
@@ -239,8 +259,9 @@ class TopArtists(APIView):
             rating = artist.get('popularity')
             artist_id = artist.get('id')
             img = artist.get('images')[0].get('url')
-            #incluir genres
             artists.append(dict(name=name, position=position, rating=rating, artist_id=artist_id,img=img))
+
+        sponse = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
 
         return Response(artists, status=status.HTTP_200_OK)
 
@@ -398,41 +419,134 @@ class History(APIView):
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_id = request.GET.get('start_id')
-        end_id = request.GET.get('end_id')
+        start_id = request.GET.get('start_id','6eUKZXaKkcviH0Ku9w2n3V')
+        end_id = request.GET.get('end_id', '7FNnA9vBm6EKceENgCGRMb')
 
         if start_id == end_id:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-        return PathFinder.BFS(request, start_id, end_id)
+        visited = PathFinder.BFS(request, start_id, end_id)
+        return PathFinder.collect_info(visited, start_id, end_id)
 
     # Breadth-first search algorithm
     def BFS(request, start_id, end_id):
-        endpoint = ''
+        endpoint = f'artists/{start_id}/'
         queue = [start_id]
-        visited = []
+        visited = {
+            start_id: {
+                'artist_id': start_id,
+                'parent_id': start_id,
+                'artist_name': spotify_api_request(request.session.session_key, endpoint).get('name'),
+                'track': None
+            }
+        }
 
         while queue:
             artist_id = queue.pop(0)
-            visited += [artist_id]
 
             endpoint = f'artists/{artist_id}/albums'
             albums = spotify_api_request(request.session.session_key, endpoint).get('items')
+            album_ids = ','.join([album.get('id') for album in albums])
+            endpoint = 'albums/'
+            albums = spotify_api_request(request.session.session_key, endpoint, extra={'ids': album_ids})
 
-            for album in albums:
-                album_id = album.get('id')
-                endpoint = f'albums/{album_id}'
-                tracks = spotify_api_request(request.session.session_key, endpoint).get('tracks').get('items')
-                for track in tracks:
-                    feats = track.get('artists')
-                    for feat in feats:
-                        feat_id = feat.get('id')
-                        if not feat_id in visited:
-                            if feat_id == end_id:
-                                return Response(feat, status=status.HTTP_200_OK)
-                            queue += [feat_id]
+            # return albums
 
-
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
-
+            tracks = []
+            for album in albums.get('albums'):
+                trks = album.get('tracks').get('items')
+                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
             
+            # return tracks
+
+            for track in tracks:
+                feats = track.get('artists')
+                for feat in feats:
+                    feat_id = feat.get('id')
+                    print(feat.get('name'))
+                    if not feat_id in visited:
+                        visited[feat_id] = {
+                            'artist_id': feat_id,
+                            'artist_name': feat.get('name'),
+                            'parent_id': artist_id,
+                            'track': track.get('name')
+                        }
+                        if feat_id == end_id:
+                            return visited
+                        queue += [feat_id]
+                            
+
+    def collect_info(visited, start_id, end_id):
+        nodes = []
+        edges = []
+
+        id = 1
+        while end_id != start_id:
+            info = visited[end_id]
+            nodes += [{'id': id, 'label': info.get('artist_name')}]
+            edges += [{'from': id+1, 'to': id, 'label': info.get('track')}]
+            id += 1
+            end_id = info.get('parent_id')
+
+
+        nodes += [{'id': id, 'label': visited[start_id].get('artist_name')}]
+
+
+        print(nodes)
+        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AudioAnalysis(APIView):
+    def get(self, request, format=None):
+        limit = request.GET.get('limit', 10)
+        endpoint = 'me/top/tracks'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = response.get('items')
+
+        ids = []
+        for i, track in enumerate(items):
+            ids += [track.get('id')]
+        infos = []
+        for id in ids:
+            new_endpoint = f'audio-features/{id}'
+            infos += [spotify_api_request(request.session.session_key, new_endpoint)]
+
+        danceability = 0
+        energy = 0
+        speechiness = 0
+        acousticness = 0
+        instrumentalness = 0
+        liveness = 0
+
+        for info in infos:
+            danceability += info.get('danceability')* 10
+            energy += info.get('energy') * 10
+            speechiness += info.get('speechiness') * 10
+            acousticness += info.get('acousticness') * 10
+            instrumentalness += info.get('instrumentalness') * 10
+            liveness += info.get('liveness') * 10
+        liveness = round(liveness)
+        instrumentalness = round(instrumentalness)
+        acousticness = round(acousticness)
+        speechiness = round(speechiness)
+        energy = round(energy)
+        danceability = round(danceability)
+        audio_data = []
+        audio_data.append(dict(label='liveness',value=liveness))
+        audio_data.append(dict(label='instrumentalness', value=instrumentalness))
+        audio_data.append(dict(label='acousticness', value=acousticness))
+        audio_data.append(dict(label='speechiness', value=speechiness))
+        audio_data.append(dict(label='energy', value=energy))
+        audio_data.append(dict(label='danceability', value=danceability))
+      
+        return Response(audio_data, status=status.HTTP_200_OK)
+
+    
