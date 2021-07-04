@@ -1,28 +1,19 @@
-.algo{
-    background-color: coral;
-}
-.vertical-bar-series-plot{
-    margin-left: 100px;
-    margin-top: 150px;
-    background-color: coral;
-    /* width: 300px;
-    height: 300px; */
-}
-.vertical-bar-series-bar {
-    background-color: black;
-    width: 25px;
-}
+
 .style-title{
     color: black;
 }
-.top-artists{
+.stats-component{
     border-radius: 15px;
     background-color: #5160b9;
     border-radius: 14;
-    color: "white";
+    /* color: "white"; */
     max-height: "85vh";
     overflow-y: "auto "
 }
 .top-artists-title{
     color: cornsilk;
+}
+.genre-content{
+    color: cornsilk;
+    font-weight: 800;
 }
