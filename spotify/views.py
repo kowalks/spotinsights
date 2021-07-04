@@ -369,6 +369,31 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
         return Response(recommendations, status=status.HTTP_200_OK)
 
+
+class History(APIView):
+    def get(self, request, format=None):
+        limit = request.GET.get('limit', 50)
+
+        endpoint = 'me/player/recently-played'
+
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+
+        if 'error' in response or 'items' not in response:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        items = []
+        
+        for i in range(0, len(response.get('items'))):
+            items.append(str(response.get('items')[i]['played_at']))
+
+        print(items)
+
+        return Response(items, status=status.HTTP_200_OK)
+
+        
         
 
 class PathFinder(APIView):

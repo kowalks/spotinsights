@@ -14,4 +14,5 @@ urlpatterns = [
     path('userdevice', UserDevice.as_view()),
     path('recommendations', Recommendations.as_view()),
     path('path-finder', PathFinder.as_view()),
+    path('history', History.as_view()),
 ]
