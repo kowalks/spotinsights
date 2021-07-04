@@ -375,8 +375,16 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_id = request.GET.get('start_id','6eUKZXaKkcviH0Ku9w2n3V')
-        end_id = request.GET.get('end_id', '7FNnA9vBm6EKceENgCGRMb')
+        start_artist = request.GET.get('start_artist','Justin Bieber')
+        end_artist = request.GET.get('end_artist', 'ANAVITORIA')
+        
+        endpoint = 'search'
+
+        start_id_item = spotify_api_request(request.session.session_key, endpoint, extra={'q': start_artist, 'type': 'artist', 'limit': 1}).get('artists').get('items')
+        end_id_item = spotify_api_request(request.session.session_key, endpoint, extra={'q': end_artist, 'type': 'artist', 'limit': 1 }).get('artists').get('items')
+
+        start_id = start_id_item[0].get('id')
+        end_id = end_id_item[0].get('id')
 
         if start_id == end_id:
             return Response({}, status=status.HTTP_204_NO_CONTENT)

@@ -38,7 +38,7 @@ const LandingPage = () =>{
             title = "FeatPath" 
             string = "Crie Playlists Personalizadas Linkando artistas!" 
             img="../static/img/receipt-icon.png"
-            longDescription = "Escrever descrição do FeatPath"
+            longDescription = "Já pensou em conectar artistas através de suas músicas conjuntas? Com o FeatPath você consegue construir a menor playlist que se inicia em um artista e termina em outro."
             />
         </Grid>
     </Container>
