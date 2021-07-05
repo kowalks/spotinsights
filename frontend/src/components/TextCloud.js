@@ -31,13 +31,13 @@ export default function cloudtext(props) {
                 <TagCloud 
                     className='tag-cloud'
                     style={{
-                        fontFamily: 'sans-serif',
-                        // fontSize: () => Math.round(Math.random() * 50) + 16,
-                        fontSize: 30,
+                        fontFamily: 'Roboto',
+                        fontSize: () => Math.round(Math.random() * 46) + 20,
+                        // fontSize: 30,
                         color: () => randomColor({
                         hue: 'blue'
                         }),
-                        padding: 5,
+                        // padding: 5,
                     }}>
                         {dados.map((teste,index)=> <div key={index}>{dados[index]}</div>)}
                     </TagCloud>
@@ -47,7 +47,6 @@ export default function cloudtext(props) {
     return (
     <div className='app-outer'>
         <div className='app-inner'>
-            <h1>react-tag-cloud demo</h1>
             {createwords(dados)}
         </div>
     </div>
