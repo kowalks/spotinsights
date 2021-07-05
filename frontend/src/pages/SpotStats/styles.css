@@ -1,19 +1,20 @@
-
+.root{
+    background: url("https://www-growth.scdn.co/static/home/bursts.svg");
+}
 .style-title{
     color: black;
 }
 .stats-component{
-    border-radius: 15px;
-    background-color: #5160b9;
+    /* border-radius: 15px; */
     border-radius: 14;
     /* color: "white"; */
     max-height: "85vh";
     overflow-y: "auto "
 }
 .top-artists-title{
-    color: cornsilk;
+    color: rgb(52, 49, 38);
 }
 .genre-content{
-    color: cornsilk;
+    color: rgb(36, 63, 57);
     font-weight: 800;
 }
