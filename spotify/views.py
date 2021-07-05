@@ -7,6 +7,7 @@ from .credentials import *
 from requests import post
 from .util import *
 import base64
+import random
 
 
 class AuthURL(APIView):
@@ -290,10 +291,13 @@ class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artis
 
         for i in range(0, len(items)):
             for j in range(0, len(items[i]['genres'])):
-                genres.append(items[i]['genres'][j]) #retorna um lista com os gêneros mais tops
-        
-        genres = {'genres': genres}
+                genres.append({
+                    'genre': items[i]['genres'][j]
+                    }) #retorna um lista com os gêneros mais tops
 
+        for i in range(3, len(genres)):
+            genres.pop(random.randint(0, len(genres)-1)) #escolhe aleatoriamente 3 dos gêneros
+        
         return Response(genres, status=status.HTTP_200_OK)
 
 
@@ -360,14 +364,10 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(items)):
             for j in range(0, len(items[i]['genres'])):
                 seed_genres.append(items[i]['genres'][j])
-        
-        print(seed_genres)
-        print(seed_artists)
-
 
         #########################
         #pegando as recomendações
-        limit = request.GET.get('limit', 3)
+        limit = request.GET.get('limit', 5)
         endpoint = 'recommendations'
 
         if not request.session.exists(request.session.session_key):
@@ -383,10 +383,9 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(response.get('tracks'))):
             recommendations.append({
                 'name': response.get('tracks')[i]['name'],
-                'artist': response.get('tracks')[i]['artists'],
-                'album': response.get('tracks')[i]['album']['images'],
-            })
-        
+                'artists': response.get('tracks')[i]['artists'][0]['name'],
+                'img': response.get('tracks')[i]['album']['images'][0]['url'],
+            })        
 
         return Response(recommendations, status=status.HTTP_200_OK)
 

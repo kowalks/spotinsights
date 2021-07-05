@@ -3,6 +3,9 @@ import {Grid} from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import SongsChart from '../../components/SongsChart';
 import ArtistCard from '../../components/ArtistCard';
+import Card from "../../components/Container";
+import RecommendationsCard from "../../components/Recommendations";
+import Genres from "../../components/GenresPaper";
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
 import './styles.css';
@@ -11,6 +14,7 @@ export default function SpotStats() {
     const [data, setData] = useState([]);
     const [genreData, setGenreData] = useState([]);
     const [generalTypeData,setGeneralTypeData] = useState([]);
+    const [recommendationsData,setRecommendationsData] = useState([]);
     let title = " SpotStats ";
     const loadArtistData = async () => {
         try{
@@ -31,15 +35,24 @@ export default function SpotStats() {
     const loadGenresData = async () => {
         try{
             let genreResponse = await fetch('/spotify/topgenres');
-            genreResponse = genreResponse.json().then(genreData => setGenreData(genreData.genres));
+            genreResponse = genreResponse.json().then(genreData => setGenreData(genreData));
         }catch(error){
             console.log("problema no GenreData");
+        }
+    };
+    const loadRecommendationsData = async () => {
+        try{
+            let recommendationsResponse = await fetch('/spotify/recommendations');
+            recommendationsResponse = recommendationsResponse.json().then(recommendationsData => setRecommendationsData(recommendationsData));
+        }catch(error){
+            console.log("problema no recommendationsData");
         }
     };
     useEffect( () => {
         loadArtistData();
         loadGeneralData();
-        loadGenresData()
+        loadGenresData();
+        loadRecommendationsData()
     }, []);
     const listArtists = (dados) => {
         // console.log(dados);
@@ -68,14 +81,25 @@ export default function SpotStats() {
 
         return(
             
-            <React.Fragment >
-                <GridList cellHeight={160} style={{ overflowY: 'hidden' }} cols={5}>
-                    {dados.map((teste,index)=> <Typography component="h5" 
-                                                            alignCenter variant="h5"
-                                                            className="genre-content"
-                                                            key={index}>
-                                                            {dados[index]}
-                                                 </Typography>)}
+            <React.Fragment>
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={3}>
+                    {dados.map((teste,index)=> <Genres data={genreData[index]} key = {index}/>)}
+                </GridList>
+            </React.Fragment>
+        );
+    }
+    const listRecommendations = (dados) => {
+        if(dados.length == 0 || dados.length == undefined){
+            return (
+                <h1>Carregando...</h1>
+            );
+        }
+
+        return(
+            
+            <React.Fragment>
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
+                    {dados.map((teste,index)=> <RecommendationsCard data={recommendationsData[index]} key = {index}/>)}
                 </GridList>
             </React.Fragment>
         );
@@ -102,6 +126,14 @@ export default function SpotStats() {
                 {listGenres(genreData)}
             </Typography>
         </Grid>
+        <Grid style={{marginTop: 10, marginBottom:30}}>
+            <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white"}}>
+                <Typography variant="h2" component="h2"> Enjoou do seu repertório? Experimente: </Typography>
+                {listRecommendations(recommendationsData)}
+            </Typography>
+        </Grid>
+
+
         </Container>
         );
 }
