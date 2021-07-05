@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import { Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { Select, MenuItem, InputLabel, FormControl, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import './styles.css';
@@ -34,18 +34,53 @@ export default function FeatPath() {
         setSecondArtist(e.target.value)
     }
 
-    /*const [data, setData] = useState([]);
-    const loadData = async (start_artist, end_artist) => {
-        try{
-            let response = await fetch('/spotify/path-finder?' + new URLSearchParams({
-                start_artist: start_artist,
-                end_artist: end_artist 
-            }));
-            response = response.json().then(data => setData(data));
-        }catch(error){
-            console.log("deu ruim")
-        }
-    }*/
+    const [data, setData] = useState([]);
+    // const loadData =  async () => {
+    //     try{
+    //         let response = await fetch('/spotify/path-finder?' + new URLSearchParams({
+    //             start_artist: firstArtist,
+    //             end_artist: secondArtist,
+    //             }));
+    //         // console.log(response.json())           
+    //         response.then(
+    //             response => {
+    //                 let data = response.json();
+    //                 setData(data);
+    //                 console.log(data);
+    //             },
+    //             console.log('deu outro ruim'));
+    //     }catch(error){
+    //         console.log(error)
+    //         console.log("deu mt ruim")
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     loadData()
+    // }, [])
+
+
+    const handleSubmit = (event) => {
+        alert('A form was submitted: ' + firstArtist + ' e ' + secondArtist);
+    
+        fetch('/spotify/path-finder?' + new URLSearchParams({
+            start_artist: firstArtist,
+            end_artist: secondArtist,
+            })).then(
+                (response) => {
+                    response.json().then(
+                        data => {
+                            setData(data);
+                            console.log(data);
+                        }
+                    )
+                }
+            ).catch(e => {
+            console.log(e);
+            });
+        event.preventDefault();
+    }
+
 
 
     return (
@@ -64,7 +99,8 @@ export default function FeatPath() {
                             onChange={updateSelectValFirstArtist}
                             autoWidth
                         >
-                            <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                            <MenuItem value='Justin Bieber'>Justin Bieber</MenuItem>
+                            {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -814,7 +850,7 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem>
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
                         </Select>
                     </FormControl>
 
@@ -826,7 +862,8 @@ export default function FeatPath() {
                             onChange={updateSelectValSecondArtist}
                             autoWidth
                         >
-                             <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                            <MenuItem value='ANAVITORIA'>Anavitória</MenuItem>
+                            {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -1576,11 +1613,15 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem>
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
                         </Select>
                     </FormControl>
 
+                    <Button variant="contained" color="secondary" onClick={handleSubmit} anchor="right" className="LoginStyle">
+                        Buscar
+                    </Button>
                 </Typography>
+
             </Grid>
         </Container>
 

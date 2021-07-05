@@ -372,7 +372,7 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit, 'seed_artists': seed_artists, 'seed_genres': seed_genres})
 
         if 'error' in response or 'tracks' not in response:
-            return Response({"error in track recommendations"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"oi"}, status=status.HTTP_204_NO_CONTENT)
 
         recommendations = []
         
@@ -381,7 +381,6 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
                 'name': response.get('tracks')[i]['name'],
                 'artists': response.get('tracks')[i]['artists'][0]['name'],
                 'img': response.get('tracks')[i]['album']['images'][0]['url'],
-                'url':response.get('tracks')[i]['external_urls']['spotify']
             })
         
 
@@ -434,9 +433,17 @@ class PathFinder(APIView):
             # return albums
 
             tracks = []
+            album_name = {}
+            
+            if not albums.get('albums'):
+                continue
+
             for album in albums.get('albums'):
-                trks = album.get('tracks').get('items')
-                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
+                if album.get('album_type') != 'compilation':
+                    trks = album.get('tracks').get('items')
+                    for trk in trks:
+                        album_name[trk.get('name')] = album.get('name')
+                    tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
             
             # return tracks
 
@@ -444,13 +451,14 @@ class PathFinder(APIView):
                 feats = track.get('artists')
                 for feat in feats:
                     feat_id = feat.get('id')
-                    print(feat.get('name'))
                     if not feat_id in visited:
+                        print(feat.get('name'), track.get('name'))
                         visited[feat_id] = {
                             'artist_id': feat_id,
                             'artist_name': feat.get('name'),
                             'parent_id': artist_id,
-                            'track': track.get('name')
+                            'track': track.get('name'),
+                            'track_metainfo': album_name[track.get('name')]
                         }
                         if feat_id == end_id:
                             return visited
@@ -465,7 +473,7 @@ class PathFinder(APIView):
         while end_id != start_id:
             info = visited[end_id]
             nodes += [{'id': id, 'label': info.get('artist_name')}]
-            edges += [{'from': id+1, 'to': id, 'label': info.get('track')}]
+            edges += [{'from': id+1, 'to': id, 'label': info.get('track'), 'meta': info.get('track_metainfo')}]
             id += 1
             end_id = info.get('parent_id')
 
@@ -474,7 +482,7 @@ class PathFinder(APIView):
 
 
         print(nodes)
-        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)
 
 
 class AudioAnalysis(APIView):
