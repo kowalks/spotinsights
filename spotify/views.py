@@ -391,8 +391,8 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_artist = request.GET.get('start_artist','Justin Bieber')
-        end_artist = request.GET.get('end_artist', 'ANAVITORIA')
+        start_artist = request.GET.get('start_artist','Ed Sheeren')
+        end_artist = request.GET.get('end_artist', 'Anitta')
         
         endpoint = 'search'
 
