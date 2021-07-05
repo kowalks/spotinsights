@@ -412,12 +412,13 @@ class PathFinder(APIView):
     def BFS(request, start_id, end_id):
         endpoint = f'artists/{start_id}/'
         queue = [start_id]
+        initial_artist = spotify_api_request(request.session.session_key, endpoint)
         visited = {
             start_id: {
                 'artist_id': start_id,
                 'parent_id': start_id,
-                'artist_name': spotify_api_request(request.session.session_key, endpoint).get('name'),
-                'track': None
+                'artist_name': initial_artist.get('name'),
+                'track': None,
             }
         }
 
@@ -451,7 +452,14 @@ class PathFinder(APIView):
 
         while end_id != start_id:
             info = visited[end_id]
-            nodes += [{'id': end_id, 'label': info.get('artist_name'), 'color': 'blue'}]
+            nodes += [{'id': end_id, 
+            'label': info.get('artist_name'),
+             'color': {'border': 'blue', 'background': "#3192b3"},
+              'font': {'bold': "true", 'size': '20'}, 
+              'shape': 'circularImage',
+               'size': '40',
+              'image': PathFinder.get_image(request, end_id).get('url')
+              }]
             all_nodes += [end_id]
             
             edges += [{'from': info.get('parent_id'), 'to': end_id, 'label': info.get('track')}]
@@ -459,7 +467,14 @@ class PathFinder(APIView):
             
             end_id = info.get('parent_id')
 
-        nodes += [{'id': start_id, 'label': visited[start_id].get('artist_name')}]
+        nodes += [{'id': start_id,
+         'label': visited[start_id].get('artist_name'),
+          'color': {'border': 'blue', 'background': "#3192b3"}, 
+          'font': {'bold': "true", 'size': '20'},
+          'shape': 'circularImage',
+          'size': '40',
+          'image': PathFinder.get_image(request, start_id).get('url'),
+          }]
         all_nodes += [start_id]
 
         # Other nodes
@@ -473,14 +488,18 @@ class PathFinder(APIView):
                 for feat in feats:
                     feat_id = feat.get('id')
                     if not feat_id in all_nodes:
-                       nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': 'red'}]
+                       nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': '#d3d3d3', 'font': {'color': "#d3d3d3"}}]
                        all_nodes += [feat_id]
                     if feat_id != node_id and not (node_id, feat_id) in all_edges:
-                        edges += [{'from': node_id, 'to': feat_id, 'label': info.get('track')}]
+                        edges += [{'from': node_id, 'to': feat_id, 'label': '', 'length': '200'}]
                         all_edges += [(node_id, feat_id)]
 
         return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)
 
+    def get_image(request, artist_id):
+        endpoint = f'artists/{artist_id}'
+        image = spotify_api_request(request.session.session_key, endpoint).get('images')[0]
+        return image
 
     def tracks_from_artists(request, artist_id):
         endpoint = f'artists/{artist_id}/albums'
