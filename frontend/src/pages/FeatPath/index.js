@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-
 export default function FeatPath() {
 
 
@@ -35,7 +34,7 @@ export default function FeatPath() {
         setSecondArtist(e.target.value)
     }
 
-    const [data, setData] = useState([]);
+    /*const [data, setData] = useState([]);
     const loadData = async (start_artist, end_artist) => {
         try{
             let response = await fetch('/spotify/path-finder?' + new URLSearchParams({
@@ -46,11 +45,7 @@ export default function FeatPath() {
         }catch(error){
             console.log("deu ruim")
         }
-    }
-
-    useEffect( () => {
-        loadData(firstArtist, secondArtist);
-    }, []);
+    }*/
 
 
     return (
