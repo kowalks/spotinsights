@@ -119,20 +119,20 @@ export default function SpotStats() {
             </Typography>
         </Grid>
         <Grid >
-            <Typography component="div" id = "stats-component">
-                
-                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography> */}
-
-                <SongsChart data={generalTypeData}></SongsChart>
-            </Typography>
-        </Grid>
-        <Grid >
             <Typography  component="div" id = "stats-component">
                 {/* <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography> */}
                 {/* {listGenres(genreData)} */}
                 <Grid style={{position: "relative", width:900,height: 550}}>
                     <TextCloud dados = {genreData}></TextCloud>
                 </Grid>
+            </Typography>
+        </Grid>
+        <Grid >
+            <Typography component="div" id = "stats-component">
+                
+                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography> */}
+
+                <SongsChart data={generalTypeData}></SongsChart>
             </Typography>
         </Grid>
         <Grid style={{marginTop: 10, marginBottom:30}}>
