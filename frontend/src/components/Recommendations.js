@@ -71,7 +71,7 @@ export default function ComplexGrid(props) {
       <Paper className={classes.paper}>
         <Grid container spacing={1}>
           <Grid item>
-            <ButtonBase className={classes.image}>
+            <ButtonBase className={classes.image} href = {props.data.url}>
               <img className={classes.img} alt="complex" src={props.data.img}/>
             </ButtonBase>
           </Grid>

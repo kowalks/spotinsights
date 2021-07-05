@@ -363,7 +363,7 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
         #########################
         #pegando as recomendações
-        limit = request.GET.get('limit', 5)
+        limit = request.GET.get('limit', 10)
         endpoint = 'recommendations'
 
         if not request.session.exists(request.session.session_key):
@@ -372,7 +372,7 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit, 'seed_artists': seed_artists, 'seed_genres': seed_genres})
 
         if 'error' in response or 'tracks' not in response:
-            return Response({"oi"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"error in track recommendations"}, status=status.HTTP_204_NO_CONTENT)
 
         recommendations = []
         
@@ -381,6 +381,7 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
                 'name': response.get('tracks')[i]['name'],
                 'artists': response.get('tracks')[i]['artists'][0]['name'],
                 'img': response.get('tracks')[i]['album']['images'][0]['url'],
+                'url':response.get('tracks')[i]['external_urls']['spotify']
             })
         
 

@@ -24,10 +24,9 @@ body {
     flex-direction: column;
     justify-content: center;
     left: 10px;
-    padding: 20px 0;
     position: absolute;
     right: 10px;
-    top: 100px;
+    top: 50px;
     /* height: 100%; */
     /* max-width: 1000px; */
     /* width: 100%; */
@@ -47,6 +46,6 @@ body {
   }
   
   .tag-cloud > div {
-    transition: 1.4s;
+    transition: 5s;
   }
   

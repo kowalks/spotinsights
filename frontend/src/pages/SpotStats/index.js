@@ -110,32 +110,34 @@ export default function SpotStats() {
     }
     return(
         <Container disableGutters = {true} className = "root" maxWidth={false} >
-        <h1 className="style-title">{title}</h1>
+        <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
 
         <Grid >
-            <Typography component="div" className = "stats-component">
-                <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
+            <Typography component="div" id = "stats-component">
+                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography> */}
                 {listArtists(data)}
             </Typography>
         </Grid>
         <Grid >
-            <Typography component="div" className = "stats-component">
-                <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
-                <SongsChart data={generalTypeData}></SongsChart>
-            </Typography>
-        </Grid>
-        <Grid >
-            <Typography  component="div" className = "stats-component">
-                <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
+            <Typography  component="div" id = "stats-component">
+                {/* <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography> */}
                 {/* {listGenres(genreData)} */}
-                <Grid style={{position: "relative",backgroundColor: "red", width:400,height: 400}}>
+                <Grid style={{position: "relative", width:900,height: 550}}>
                     <TextCloud dados = {genreData}></TextCloud>
                 </Grid>
             </Typography>
         </Grid>
+        <Grid >
+            <Typography component="div" id = "stats-component">
+                
+                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography> */}
+
+                <SongsChart data={generalTypeData}></SongsChart>
+            </Typography>
+        </Grid>
         <Grid style={{marginTop: 10, marginBottom:30}}>
-            <Typography component="div" style={{ backgroundColor: '#24242255', borderRadius: 14, color: "black"}}>
-                <Typography variant="h2" component="h2"> Enjoou do seu repertório? Experimente: </Typography>
+            <Typography component="div" id = "stats-component">
+                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography> */}
                 {listRecommendations(recommendationsData)}
             </Typography>
         </Grid>
