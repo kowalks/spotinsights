@@ -272,7 +272,7 @@ class TopArtists(APIView):
 
 class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artistas
     def get(self, request, format=None):
-        limit = request.GET.get('limit', 3)
+        limit = request.GET.get('limit', 5)
 
         endpoint = 'me/top/artists'
 
@@ -288,13 +288,12 @@ class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artis
 
         genres = []
 
-        for i in range(0, len(items)):
-            for j in range(0, len(items[i]['genres'])):
-                genres.append(items[i]['genres'][j]) #retorna um lista com os gêneros mais tops
-        
-        genres = {'genres': genres}
+        for item in items:
+            for genre in item.get('genres'):
+                if genre not in genres:
+                    genres += [genre]
 
-        return Response(genres, status=status.HTTP_200_OK)
+        return Response({'genres': genres}, status=status.HTTP_200_OK)
 
 
 class UserDevice(APIView):        #retorna as infos como id, is_active, name (e.g. Android), type (e.g. Smartphone)
