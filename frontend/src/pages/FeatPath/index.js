@@ -2,10 +2,13 @@ import React from 'react';
 import { Grid } from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import { Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Select, MenuItem, InputLabel, FormControl, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'; 
+import ReactDOM from "react-dom";
+import Graph from "react-graph-vis";
 
 import './styles.css';
+import "./network.css";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -20,6 +23,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FeatPath() {
 
+    const options = {
+        layout: {
+            hierarchical: true
+        },
+        edges: {
+            color: "blue"
+        },
+        nodes: {
+            shape: 'circularImage'
+        }
+    };
+
+    const events = {
+        select: function (event) {
+            var { nodes, edges } = event;
+        }
+    };
 
     const classes = useStyles();
     const [firstArtist, setFirstArtist] = React.useState('')
@@ -31,24 +51,64 @@ export default function FeatPath() {
     const updateSelectValSecondArtist = (e) => {
         setSecondArtist(e.target.value)
     }
+    
+    const [data, setData] = React.useState({
+        nodes: [
+            {id: 1, label: 'Node 1'},
+            {id: 2, label: 'Node 2'},
+            {id: 3, label: 'Node 3'},
+            {id: 4, label: 'Node 4'},
+            {id: 5, label: 'Node 5'}
+          ],
+        edges: [
+            {from: 1, to: 2},
+            {from: 1, to: 3},
+            {from: 2, to: 4},
+            {from: 2, to: 5}
+          ]
+      })
+
+    const handleSubmit = (event) => {
+        alert('A form was submitted: ' + firstArtist + ' e ' + secondArtist);
+
+        fetch('/spotify/path-finder?' + new URLSearchParams({
+            start_artist: firstArtist,
+            end_artist: secondArtist,
+        })).then(
+            (response) => {
+                response.json().then(
+                    data => {
+                        setData(data);
+                        console.log(data);
+                    }
+                )
+            }
+        ).catch(e => {
+            console.log(e);
+        });
+        event.preventDefault();
+    }
+
+
 
     return (
+        <div>
+            <Container maxWidth="xl">
+                <h1 className="styleTitle"></h1>
+                <Grid style={{ marginTop: 10 }}>
+                    <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white" }}>
+                        <Typography variant="h3" component="h3"> Feat Path </Typography>
 
-        <Container maxWidth="xl">
-            <h1 className="styleTitle"></h1>
-            <Grid style={{ marginTop: 10 }}>
-                <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white" }}>
-                    <Typography variant="h3" component="h3"> Feat Path </Typography>
-
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="First artist label">Primeiro artista</InputLabel>
-                        <Select
-                            value={firstArtist}
-                            displayEmpty
-                            onChange={updateSelectValFirstArtist}
-                            autoWidth
-                        >
-                            <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="First artist label">Primeiro artista</InputLabel>
+                            <Select
+                                value={firstArtist}
+                                displayEmpty
+                                onChange={updateSelectValFirstArtist}
+                                autoWidth
+                            >
+                                <MenuItem value='Ed Sheeran'>Ed Sheeran</MenuItem>
+                                {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -798,19 +858,20 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem>
-                        </Select>
-                    </FormControl>
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
+                            </Select>
+                        </FormControl>
 
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="Second artist label">Segundo artista</InputLabel>
-                        <Select
-                            value={secondArtist}
-                            displayEmpty
-                            onChange={updateSelectValSecondArtist}
-                            autoWidth
-                        >
-                             <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="Second artist label">Segundo artista</InputLabel>
+                            <Select
+                                value={secondArtist}
+                                displayEmpty
+                                onChange={updateSelectValSecondArtist}
+                                autoWidth
+                            >
+                                <MenuItem value='Anitta'>Anitta</MenuItem>
+                                {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -1560,14 +1621,27 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem>
-                        </Select>
-                    </FormControl>
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
+                            </Select>
+                        </FormControl>
 
-                </Typography>
-            </Grid>
-        </Container>
+                        <Button variant="contained" color="secondary" onClick={handleSubmit} anchor="right" className="LoginStyle">
+                            Buscar
+                        </Button>
+                    </Typography>
+                </Grid>
+            </Container>
 
+            <Graph
+                style={{width: '100%', height: '640px'}}
+                graph={data}
+                options={options}
+                events={events}
+                getNetwork={network => {
+                    //  if you want access to vis.js network api you can set the state in a parent component using this property
+                }}
+            />
+        </div>
     );
 }
 

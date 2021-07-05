@@ -441,6 +441,7 @@ class PathFinder(APIView):
                             
 
     def collect_info(visited, start_id, end_id):
+        print(start_id, end_id)
         nodes = []
         edges = []
 
