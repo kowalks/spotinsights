@@ -14,10 +14,14 @@ const useStyles = makeStyles((theme) => ({
     margin: 5,
   },
   paper: {
-    margin: 5,
+    margin: "auto",
     maxWidth: 500,
     position: "relative",
-    backgroundColor: "#5160B9",
+    backgroundColor: "#242422",
+    width: 450,
+    borderRadius: '30px',
+    marginTop: 20,
+    marginBottom: 20
   },
   image: {
     width: 128,
@@ -34,6 +38,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  string: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp:1,
+    WebkitBoxOrient:'vertical',
+    fontSize: 13,
+    color: "white"
+  },
 }));
 
 export default function ComplexGrid(props) {
@@ -49,7 +62,7 @@ export default function ComplexGrid(props) {
   return (
     <React.Fragment>
       <Paper className={classes.paper} >
-      <FlipCard style={{padding: "16px", backgroundColor: "white"}}>
+      <FlipCard style={{padding: "16px"}}>
         <Grid container spacing={2} className="front">
           <Grid item>
             <ButtonBase className={classes.image}>
@@ -59,18 +72,18 @@ export default function ComplexGrid(props) {
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="overline" color="textPrimary">
+                <Typography gutterBottom variant="overline" color="textPrimary" className={classes.string}>
                   {props.data.name}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" gutterBottom>
+                <Typography variant="body2" color="textSecondary" gutterBottom className={classes.string}>
                   {props.data.artists}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="white">
                   Position: {props.data.position}
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="white">
                   {min}:{sec}
                 </Typography>
               </Grid>
