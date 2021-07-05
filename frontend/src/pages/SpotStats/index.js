@@ -5,6 +5,7 @@ import SongsChart from '../../components/SongsChart';
 import ArtistCard from '../../components/ArtistCard';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
+import TextCloud from '../../components/TextCloud';
 import './styles.css';
 
 export default function SpotStats() {
@@ -81,27 +82,31 @@ export default function SpotStats() {
         );
     }
     return(
-        <Container maxWidth="xl">
+        <Container disableGutters = {true} className = "root" maxWidth={false} >
         <h1 className="style-title">{title}</h1>
 
-        <Grid style={{marginTop: 10, marginBottom:20}} >
+        <Grid >
             <Typography component="div" className = "stats-component">
                 <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
                 {listArtists(data)}
             </Typography>
         </Grid>
-        <Grid style={{marginTop: 10, marginBottom:20}} >
+        <Grid >
             <Typography component="div" className = "stats-component">
                 <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
                 <SongsChart data={generalTypeData}></SongsChart>
             </Typography>
         </Grid>
-        <Grid style={{marginTop: 10, marginBottom:20}} >
-            <Typography component="div" className = "stats-component">
-                <Typography variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
-                {listGenres(genreData)}
+        <Grid >
+            <Typography  component="div" className = "stats-component">
+                <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
+                {/* {listGenres(genreData)} */}
+                <Grid style={{position: "relative",backgroundColor: "red", width:400,height: 400}}>
+                    <TextCloud dados = {genreData}></TextCloud>
+                </Grid>
             </Typography>
         </Grid>
+        
         </Container>
         );
 }
