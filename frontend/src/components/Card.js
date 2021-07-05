@@ -32,6 +32,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: '70%',
     fontSize: 20,
+    justifyContent: 'center'
   },
   title: {
     fontSize: 36,

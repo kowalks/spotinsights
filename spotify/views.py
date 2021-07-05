@@ -78,7 +78,26 @@ def callback(request, format=None):
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         authenticated = is_authenticated(request.session.session_key)
-        return Response({'status': authenticated}, status=status.HTTP_200_OK)
+        if authenticated:
+            endpoint = 'me/'
+            user = spotify_api_request(request.session.session_key, endpoint)           
+            
+            metadata = {
+                'profile': user.get('images')[0].get('url'),
+                'name': user.get('display_name'),
+                'email': user.get('email'),
+                'country': user.get('country'),
+                'id': user.get('id')
+                }
+        else:
+            metadata = None
+
+        return Response(
+            {
+            'status': authenticated, 
+            'metadata': metadata
+            }, 
+            status=status.HTTP_200_OK)
 
 
 class CurrentSong(APIView):
@@ -341,14 +360,10 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(items)):
             for j in range(0, len(items[i]['genres'])):
                 seed_genres.append(items[i]['genres'][j])
-        
-        print(seed_genres)
-        print(seed_artists)
-
 
         #########################
         #pegando as recomendações
-        limit = request.GET.get('limit', 3)
+        limit = request.GET.get('limit', 10)
         endpoint = 'recommendations'
 
         if not request.session.exists(request.session.session_key):
@@ -364,19 +379,20 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(response.get('tracks'))):
             recommendations.append({
                 'name': response.get('tracks')[i]['name'],
-                'artist': response.get('tracks')[i]['artists'],
-                'album': response.get('tracks')[i]['album']['images'],
+                'artists': response.get('tracks')[i]['artists'][0]['name'],
+                'img': response.get('tracks')[i]['album']['images'][0]['url'],
             })
         
 
         return Response(recommendations, status=status.HTTP_200_OK)
 
         
+        
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_artist = request.GET.get('start_artist','Justin Bieber')
-        end_artist = request.GET.get('end_artist', 'ANAVITORIA')
+        start_artist = request.GET.get('start_artist','Ed Sheeren')
+        end_artist = request.GET.get('end_artist', 'Anitta')
         
         endpoint = 'search'
 
@@ -390,7 +406,7 @@ class PathFinder(APIView):
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         visited = PathFinder.BFS(request, start_id, end_id)
-        return PathFinder.collect_info(visited, start_id, end_id)
+        return PathFinder.collect_info(request, visited, start_id, end_id)
 
     # Breadth-first search algorithm
     def BFS(request, start_id, end_id):
@@ -408,57 +424,85 @@ class PathFinder(APIView):
         while queue:
             artist_id = queue.pop(0)
 
-            endpoint = f'artists/{artist_id}/albums'
-            albums = spotify_api_request(request.session.session_key, endpoint).get('items')
-            album_ids = ','.join([album.get('id') for album in albums])
-            endpoint = 'albums/'
-            albums = spotify_api_request(request.session.session_key, endpoint, extra={'ids': album_ids})
-
-            # return albums
-
-            tracks = []
-            for album in albums.get('albums'):
-                trks = album.get('tracks').get('items')
-                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
-            
-            # return tracks
+            tracks = PathFinder.tracks_from_artists(request, artist_id)
 
             for track in tracks:
                 feats = track.get('artists')
                 for feat in feats:
                     feat_id = feat.get('id')
-                    print(feat.get('name'))
                     if not feat_id in visited:
+                        print(feat.get('name'), track.get('name'))
                         visited[feat_id] = {
                             'artist_id': feat_id,
                             'artist_name': feat.get('name'),
                             'parent_id': artist_id,
-                            'track': track.get('name')
+                            'track': track.get('name'),
                         }
                         if feat_id == end_id:
                             return visited
                         queue += [feat_id]
                             
 
-    def collect_info(visited, start_id, end_id):
-        print(start_id, end_id)
+    def collect_info(request, visited, start_id, end_id):
+        all_nodes = []
+        all_edges = []
         nodes = []
         edges = []
 
-        id = 1
         while end_id != start_id:
             info = visited[end_id]
-            nodes += [{'id': id, 'label': info.get('artist_name')}]
-            edges += [{'from': id+1, 'to': id, 'label': info.get('track')}]
-            id += 1
+            nodes += [{'id': end_id, 'label': info.get('artist_name'), 'color': 'blue'}]
+            all_nodes += [end_id]
+            
+            edges += [{'from': info.get('parent_id'), 'to': end_id, 'label': info.get('track')}]
+            all_edges += [(info.get('parent_id'), end_id)]
+            
             end_id = info.get('parent_id')
 
+        nodes += [{'id': start_id, 'label': visited[start_id].get('artist_name')}]
+        all_nodes += [start_id]
 
-        nodes += [{'id': id, 'label': visited[start_id].get('artist_name')}]
+        # Other nodes
+        path_nodes = nodes.copy()
+        for node in path_nodes:
+            node_id = node['id']
+            tracks = PathFinder.tracks_from_artists(request, node_id)
+
+            for track in tracks:
+                feats = track.get('artists')
+                for feat in feats:
+                    feat_id = feat.get('id')
+                    if not feat_id in all_nodes:
+                       nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': 'red'}]
+                       all_nodes += [feat_id]
+                    if feat_id != node_id and not (node_id, feat_id) in all_edges:
+                        edges += [{'from': node_id, 'to': feat_id, 'label': info.get('track')}]
+                        all_edges += [(node_id, feat_id)]
+
+        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)
 
 
-        print(nodes)
-        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_204_NO_CONTENT)
+    def tracks_from_artists(request, artist_id):
+        endpoint = f'artists/{artist_id}/albums'
+        albums = spotify_api_request(request.session.session_key, endpoint).get('items')
+        album_ids = ','.join([album.get('id') for album in albums])
+        endpoint = 'albums/'
+        albums = spotify_api_request(request.session.session_key, endpoint, extra={'ids': album_ids})
+
+        # return albums
+
+        tracks = []
+        album_name = {}
+        
+        if not albums.get('albums'):
+            return None
+
+        for album in albums.get('albums'):
+            if album.get('album_type') != 'compilation':
+                trks = album.get('tracks').get('items')
+                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
+        
+        return tracks
 
 
 class AudioAnalysis(APIView):

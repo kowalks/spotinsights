@@ -27,19 +27,8 @@ export default function ButtonAppBar(props) {
   const classes = useStyles();
 
   const [logged, setData] = useState(false);
-  const [profilepic, setpic] = useState("");
+  const [metada, setMeta] = useState([]);
  
-
-  const getPic = async () => {
-    try{
-      let response = await fetch('/spotify/profileimage')
-      return response.json()
-    }catch(error){
-      console.log("Error to get pic");
-    }
-  }
-
-
   const check_Log = async () => {
     try{
       let response = await fetch('/spotify/is-authenticated')
@@ -49,37 +38,32 @@ export default function ButtonAppBar(props) {
     }
   }
 
+  
   useEffect( () => {
     if(logged == false || logged == undefined){
-      check_Log().then((data) => setData(data.status));
+      check_Log().then((data) => {
+        setData(data.status)
+        setMeta(data.metadata)
+      });
     }
   }, [logged]);
 
-  useEffect( () => {
-    if(profilepic == ""){
-      getPic().then((data) => setpic(data.url));
-    }
-  }, [profilepic]);
-
-
   const setButton = () => {
     if(logged == true){
-      if(profilepic != "")
         return(
-        <img className="LoginStyle" style={{borderRadius: 200, maxWidth: 64}} alt="complex" src={profilepic} />
-          );
-     return(
-        <AccountCircleIcon className="LoginStyle" color="action" style={{ fontSize: 60 }}/>
-     ); 
+          <React.Fragment>
+            <Typography variant="h6" style={{marginRight: 10}}>
+              {metada.name}
+            </Typography>
+            <img className="LoginStyle" style={{borderRadius: 200, maxWidth: 48}} alt="complex" src={metada.profile} />
+          </React.Fragment>
+        );
     }
 
     return(
-      <Typography variant="h6" className={classes.title}>
-        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
-        <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
+      <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
           Log In
-        </Button>
-      </Typography>
+      </Button>
     );
   }
 
