@@ -76,12 +76,6 @@ export default function CustomizedDialogs(props) {
           <Typography gutterBottom color = "textPrimary" >
             {props.content}
           </Typography>
-          <Typography gutterBottom color = "textPrimary">
-          {props.content}
-          </Typography>
-          <Typography gutterBottom color = "textPrimary">
-          {props.content}
-          </Typography>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
