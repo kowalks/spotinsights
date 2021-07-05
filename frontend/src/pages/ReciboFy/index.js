@@ -13,22 +13,12 @@ import Switch from '@material-ui/core/Switch';
 
 export default function ReciboFy() {
     //botões:
-    let checked = [false, false, false]
+    let checked = [true, false, false]
 
     let title = " ReciboFy ";
     const [dataShort, setDataShort] = useState([]);
     const [dataMedium, setDataMedium] = useState([]);
     const [dataLong, setDataLong] = useState([]);
-
-    // handleClick0(){
-    //     checked[0] = true;
-    // }
-    // handleClick1(){
-    //     checked[1] = true;
-    // }
-    // handleClick2(){
-    //     checked[2] = true;
-    }
 
     const loadData = async () => {
         try{
@@ -57,6 +47,20 @@ export default function ReciboFy() {
     useEffect( () => {
         loadData();
     }, []);
+    useEffect( () => {
+        if(checked[0] == true){
+            checked[1] = false
+            checked[2] = false
+        }
+        if(checked[1] == true){
+            checked[0] = false
+            checked[2] = false
+        }
+        if(checked[2] == true){
+            checked[0] = false
+            checked[1] = false
+        }
+    }, [checked]);
 
     const list = (dados) => {
         
@@ -68,7 +72,7 @@ export default function ReciboFy() {
 
         if(checked[0] == true){
             checked[0] = false
-                console.log("oi")
+            console.log("short")
             return(
                 
                 <React.Fragment>
@@ -78,10 +82,10 @@ export default function ReciboFy() {
                 </React.Fragment>
             );
         }
+
         else if(checked[1] == true){
             checked[1] = false
-            console.log("entrou")
-            console.log("saiu")
+            console.log("medium")
             return(
                 
                 <React.Fragment>
@@ -91,9 +95,10 @@ export default function ReciboFy() {
                 </React.Fragment>
             );
         }
+
         else if(checked[2] == true){
             checked[2] = false
-            console.log("Qqweqweqweq")
+            console.log("long")
             return(
                 
                 <React.Fragment>
@@ -113,9 +118,9 @@ export default function ReciboFy() {
                 <Typography variant="h2" component="h2">
                 {title}
                 </Typography>
-                <ButtonBase onClick={handleClick0} >0</ButtonBase>
-                <ButtonBase onClick={handleClick1} >1</ButtonBase>
-                <ButtonBase onClick={handleClick2} >2</ButtonBase>
+                <ButtonBase onClick={() => { checked[0] = true; list(dataShort) }} >0</ButtonBase>
+                <ButtonBase onClick={() => { checked[1] = true; list(dataMedium) }} >1</ButtonBase>
+                <ButtonBase onClick={() => { checked[2] = true; list(dataLong) }} >2</ButtonBase>
                 {checked[0]? list(dataShort): (checked[1]? list(dataMedium): (checked[2]? list(dataLong): list({})))}
             </Typography>
         </Grid>
