@@ -83,7 +83,7 @@ export default function SpotStats() {
     }
     return(
         <Container disableGutters = {true} className = "root" maxWidth={false} >
-        <h1 className="style-title">{title}</h1>
+        <Typography component="h1" variant="h1" className="style-title">{title}</Typography>
 
         <Grid >
             <Typography component="div" id = "stats-component">
