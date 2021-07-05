@@ -11,7 +11,7 @@
     max-width: 70px;
     border: 2px solid #313131;
     border-radius: 12px;
-    background-color: #5160b9;
+    background-color: #e3e4e6;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -19,15 +19,15 @@
   }
   
   .chart-bar__fill {
-    background-color: #b6b0c9;
+    background-color: #1b1b1c;
     width: 100%;
     transition: all 0.3s ease-out;
   }
   
   .chart-bar__label {
-    width: 120px;
+    width: 150px;
     font-weight: bold;
-    font-size: 1rem;
-    color: cornsilk;
+    font-size: 1.5rem;
+    color: rgb(48, 41, 81);
     text-align: center;
   }
