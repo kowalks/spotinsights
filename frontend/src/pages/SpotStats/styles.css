@@ -13,8 +13,10 @@
         background: url("https://www-growth.scdn.co/static/home/bursts.svg");
     }
 }
-.style-title{
+#style-title{
     color: black;
+    padding-top: 10px;
+    font-weight: 300;
 }
 #stats-component{
     max-height: "85vh";
