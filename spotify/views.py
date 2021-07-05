@@ -360,14 +360,10 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(items)):
             for j in range(0, len(items[i]['genres'])):
                 seed_genres.append(items[i]['genres'][j])
-        
-        print(seed_genres)
-        print(seed_artists)
-
 
         #########################
         #pegando as recomendações
-        limit = request.GET.get('limit', 3)
+        limit = request.GET.get('limit', 5)
         endpoint = 'recommendations'
 
         if not request.session.exists(request.session.session_key):
@@ -383,36 +379,12 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
         for i in range(0, len(response.get('tracks'))):
             recommendations.append({
                 'name': response.get('tracks')[i]['name'],
-                'artist': response.get('tracks')[i]['artists'],
-                'album': response.get('tracks')[i]['album']['images'],
+                'artists': response.get('tracks')[i]['artists'][0]['name'],
+                'img': response.get('tracks')[i]['album']['images'][0]['url'],
             })
         
 
         return Response(recommendations, status=status.HTTP_200_OK)
-
-
-class History(APIView):
-    def get(self, request, format=None):
-        limit = request.GET.get('limit', 50)
-
-        endpoint = 'me/player/recently-played'
-
-        if not request.session.exists(request.session.session_key):
-            request.session.create()
-
-        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
-
-        if 'error' in response or 'items' not in response:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        items = []
-        
-        for i in range(0, len(response.get('items'))):
-            items.append(str(response.get('items')[i]['played_at']))
-
-        print(items)
-
-        return Response(items, status=status.HTTP_200_OK)
 
         
         

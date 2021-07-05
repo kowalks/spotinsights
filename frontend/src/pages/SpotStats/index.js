@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Grid} from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import SongsChart from '../../components/SongsChart';
+import RecommendationsCard from '../../components/Recommendations';
 import ArtistCard from '../../components/ArtistCard';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
@@ -11,6 +12,7 @@ import './styles.css';
 export default function SpotStats() {
     const [data, setData] = useState([]);
     const [genreData, setGenreData] = useState([]);
+    const [recommendationsData,setRecommendationsData] = useState([]);
     const [generalTypeData,setGeneralTypeData] = useState([]);
     let title = " SpotStats ";
     const loadArtistData = async () => {
@@ -37,10 +39,19 @@ export default function SpotStats() {
             console.log("problema no GenreData");
         }
     };
+    const loadRecommendationsData = async () => {
+        try{
+            let recommendationsResponse = await fetch('/spotify/recommendations');
+            recommendationsResponse = recommendationsResponse.json().then(recommendationsData => setRecommendationsData(recommendationsData));
+        }catch(error){
+            console.log("problema no recommendationsData");
+        }
+    };
     useEffect( () => {
         loadArtistData();
         loadGeneralData();
-        loadGenresData()
+        loadGenresData();
+        loadRecommendationsData()
     }, []);
     const listArtists = (dados) => {
         // console.log(dados);
@@ -81,6 +92,22 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
+    const listRecommendations = (dados) => {
+        if(dados.length == 0 || dados.length == undefined){
+            return (
+                <h1>Carregando...</h1>
+            );
+        }
+
+        return(
+            
+            <React.Fragment>
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
+                    {dados.map((teste,index)=> <RecommendationsCard data={recommendationsData[index]} key = {index}/>)}
+                </GridList>
+            </React.Fragment>
+        );
+    }
     return(
         <Container disableGutters = {true} className = "root" maxWidth={false} >
         <h1 className="style-title">{title}</h1>
@@ -104,6 +131,12 @@ export default function SpotStats() {
                 <Grid style={{position: "relative",backgroundColor: "red", width:400,height: 400}}>
                     <TextCloud dados = {genreData}></TextCloud>
                 </Grid>
+            </Typography>
+        </Grid>
+        <Grid style={{marginTop: 10, marginBottom:30}}>
+            <Typography component="div" style={{ backgroundColor: '#24242255', borderRadius: 14, color: "black"}}>
+                <Typography variant="h2" component="h2"> Enjoou do seu repertório? Experimente: </Typography>
+                {listRecommendations(recommendationsData)}
             </Typography>
         </Grid>
         
