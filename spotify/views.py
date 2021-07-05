@@ -141,13 +141,14 @@ class CurrentSong(APIView):
 class TopTracks(APIView):
     def get(self, request, format=None):
         limit = request.GET.get('limit', 20)
+        time_range = request.GET.get('time_range', 'medium_term')
 
         endpoint = 'me/top/tracks'
 
         if not request.session.exists(request.session.session_key):
             request.session.create()
 
-        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit, 'time_range': time_range})
 
         if 'error' in response or 'items' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
