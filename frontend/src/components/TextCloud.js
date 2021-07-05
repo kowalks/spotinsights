@@ -31,13 +31,13 @@ export default function cloudtext(props) {
                 <TagCloud 
                     className='tag-cloud'
                     style={{
-                        fontFamily: 'sans-serif',
-                        fontSize: () => Math.round(Math.random() * 50) + 16,
+                        fontFamily: 'Roboto',
+                        fontSize: () => Math.round(Math.random() * 46) + 20,
                         // fontSize: 30,
                         color: () => randomColor({
                         hue: 'blue'
                         }),
-                        padding: 5,
+                        // padding: 5,
                     }}>
                         {dados.map((teste,index)=> <div key={index}>{dados[index]}</div>)}
                     </TagCloud>

@@ -86,22 +86,24 @@ export default function SpotStats() {
         <h1 className="style-title">{title}</h1>
 
         <Grid >
-            <Typography component="div" className = "stats-component">
+            <Typography component="div" id = "stats-component">
                 <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
                 {listArtists(data)}
             </Typography>
         </Grid>
         <Grid >
-            <Typography component="div" className = "stats-component">
-                <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
+            <Typography component="div" id = "stats-component">
+                <Typography variant="h3" component="h3" 
+                            style = {{/*backgroundColor: 'rgba(22, 29, 69,.3)'*/}} 
+                            className = "top-artists-title"> General Data </Typography>
                 <SongsChart data={generalTypeData}></SongsChart>
             </Typography>
         </Grid>
         <Grid >
-            <Typography  component="div" className = "stats-component">
+            <Typography  component="div" id = "stats-component">
                 <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
                 {/* {listGenres(genreData)} */}
-                <Grid style={{position: "relative", width:1000,height: 600}}>
+                <Grid style={{position: "relative", width:900,height: 550}}>
                     <TextCloud dados = {genreData}></TextCloud>
                 </Grid>
             </Typography>
