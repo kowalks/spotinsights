@@ -61,12 +61,9 @@ export default function ButtonAppBar(props) {
     }
 
     return(
-      <Typography variant="h6" className={classes.title}>
-        <Link to ='/' style={{ color: 'white', textDecoration: 'inherit'}}>SpotInsights</Link> 
-        <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
+      <Button variant="contained" color="secondary" onClick={props.bf} anchor="right" className="LoginStyle">
           Log In
-        </Button>
-      </Typography>
+      </Button>
     );
   }
 
