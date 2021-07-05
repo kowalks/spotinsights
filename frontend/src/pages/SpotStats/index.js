@@ -101,7 +101,7 @@ export default function SpotStats() {
             <Typography  component="div" className = "stats-component">
                 <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
                 {/* {listGenres(genreData)} */}
-                <Grid style={{position: "relative",backgroundColor: "red", width:400,height: 400}}>
+                <Grid style={{position: "relative", width:1000,height: 600}}>
                     <TextCloud dados = {genreData}></TextCloud>
                 </Grid>
             </Typography>

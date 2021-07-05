@@ -32,8 +32,8 @@ export default function cloudtext(props) {
                     className='tag-cloud'
                     style={{
                         fontFamily: 'sans-serif',
-                        // fontSize: () => Math.round(Math.random() * 50) + 16,
-                        fontSize: 30,
+                        fontSize: () => Math.round(Math.random() * 50) + 16,
+                        // fontSize: 30,
                         color: () => randomColor({
                         hue: 'blue'
                         }),
@@ -47,7 +47,6 @@ export default function cloudtext(props) {
     return (
     <div className='app-outer'>
         <div className='app-inner'>
-            <h1>react-tag-cloud demo</h1>
             {createwords(dados)}
         </div>
     </div>
