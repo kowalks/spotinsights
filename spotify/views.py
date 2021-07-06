@@ -531,9 +531,10 @@ class PathFinder(APIView):
 
         response = spotify_api_request(request.session.session_key, endpoint, extra={'ids': form_ids})
         info = [{
-            "image" : track.get('album').get('images')[0].get('url'),
+            "img" : track.get('album').get('images')[0].get('url'),
             "name"  : track.get('name'),
-            "href"  : track.get('href')
+            "url"  : track.get('external_urls').get('spotify'),
+            "artists" : '',
             } for track in response.get('tracks')]
 
         return info

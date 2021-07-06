@@ -6,6 +6,9 @@ import { Select, MenuItem, InputLabel, FormControl, Button } from '@material-ui/
 import { makeStyles } from '@material-ui/core/styles';
 import ReactDOM from "react-dom";
 import Graph from "react-graph-vis";
+import RecommendationsCard from '../../components/Recommendations';
+
+import GridList from '@material-ui/core/GridList';
 
 import './styles.css';
 
@@ -64,6 +67,7 @@ export default function FeatPath() {
     const classes = useStyles();
     const [firstArtist, setFirstArtist] = React.useState('')
     const updateSelectValFirstArtist = (e) => {
+        console.log(e)
         setFirstArtist(e.target.value)
     }
 
@@ -78,6 +82,8 @@ export default function FeatPath() {
         edges: []
     })
 
+    const [dataPath, setPath] = React.useState([])
+
     const handleSubmit = (event) => {
         fetch('/spotify/path-finder?' + new URLSearchParams({
             start_artist: firstArtist,
@@ -86,8 +92,9 @@ export default function FeatPath() {
             (response) => {
                 response.json().then(
                     data => {
-                        setData(data);
-                        console.log(data);
+                        setData(data.graph);
+                        setPath(data.path);
+                        console.log(data.path);
                     }
                 )
             }
@@ -1646,6 +1653,19 @@ export default function FeatPath() {
                 options={options}
                 events={events}
             />
+
+            <Container>
+                <Grid style={{ marginTop: 10 }}>
+                <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white", paddingTop: "20px", paddingBottom: "20px" }}>
+                 <h1>Músicas - Path</h1> 
+            
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
+                    {dataPath.map((teste,index)=> <RecommendationsCard data={dataPath[index]} key = {index}/>)}
+                </GridList>
+
+                </Typography>
+                </Grid>
+            </Container>
 
         </div>
     );
