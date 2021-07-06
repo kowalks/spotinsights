@@ -6,5 +6,5 @@
 CLIENT_ID = '80b2bc37c3c94cd0b393f50882f5b9dd'
 CLIENT_SECRET = '129f3e3406aa4c4a90b33fcaf9b22e60'
 
-# REDIRECT_URI = 'https://spotinsights.herokuapp.com/spotify/callback'
-REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback'
+REDIRECT_URI = 'https://spotinsights.herokuapp.com/spotify/callback'
+# REDIRECT_URI = 'http://127.0.0.1:8000/spotify/callback'
