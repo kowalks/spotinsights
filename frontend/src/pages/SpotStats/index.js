@@ -74,11 +74,8 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
-<<<<<<< HEAD
-=======
     
 
->>>>>>> 4ed530b86448f143d3defa90b9d0efaf35dc5b7b
     const listRecommendations = (dados) => {
         if(dados.length == 0 || dados.length == undefined){
             return (
@@ -94,11 +91,10 @@ export default function SpotStats() {
                 </GridList>
             </React.Fragment>
         );
-    }
-
+    } 
 
     return(
-        <Container disableGutters = {true} className = "root" maxWidth={false} >
+        <Container className= "root" >
             <Container className = "bg-image" ></Container>
             <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
 
@@ -134,5 +130,3 @@ export default function SpotStats() {
         </Container>
         );
 }
-
-   
