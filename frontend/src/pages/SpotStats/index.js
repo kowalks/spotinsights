@@ -2,14 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {Grid} from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import SongsChart from '../../components/SongsChart';
+import RecommendationsCard from '../../components/Recommendations';
 import ArtistCard from '../../components/ArtistCard';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
+import TextCloud from '../../components/TextCloud';
 import './styles.css';
 
 export default function SpotStats() {
     const [data, setData] = useState([]);
     const [genreData, setGenreData] = useState([]);
+    const [recommendationsData,setRecommendationsData] = useState([]);
     const [generalTypeData,setGeneralTypeData] = useState([]);
     let title = " SpotStats ";
     const loadArtistData = async () => {
@@ -31,16 +34,29 @@ export default function SpotStats() {
     const loadGenresData = async () => {
         try{
             let genreResponse = await fetch('/spotify/topgenres');
-            genreResponse = genreResponse.json().then(genreData => setGenreData(genreData.genres));
+            genreResponse = genreResponse.json().then(genreData => {
+                setGenreData(genreData.genres);
+            });
         }catch(error){
             console.log("problema no GenreData");
+        }
+    };
+    const loadRecommendationsData = async () => {
+        try{
+            let recommendationsResponse = await fetch('/spotify/recommendations');
+            recommendationsResponse = recommendationsResponse.json().then(recommendationsData => setRecommendationsData(recommendationsData));
+        }catch(error){
+            console.log("problema no recommendationsData");
         }
     };
     useEffect( () => {
         loadArtistData();
         loadGeneralData();
-        loadGenresData()
+        loadGenresData();
+        loadRecommendationsData()
     }, []);
+
+
     const listArtists = (dados) => {
         // console.log(dados);
         if(dados.length == 0 || dados.length == undefined){
@@ -58,8 +74,9 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
-    const listGenres = (dados) => {
-        // console.log(dados);
+    
+
+    const listRecommendations = (dados) => {
         if(dados.length == 0 || dados.length == undefined){
             return (
                 <h1>Carregando...</h1>
@@ -68,42 +85,48 @@ export default function SpotStats() {
 
         return(
             
-            <React.Fragment >
-                <GridList cellHeight={160} style={{ overflowY: 'hidden' }} cols={5}>
-                    {dados.map((teste,index)=> <Typography component="h5" 
-                                                            alignCenter variant="h5"
-                                                            className="genre-content"
-                                                            key={index}>
-                                                            {dados[index]}
-                                                 </Typography>)}
+            <React.Fragment>
+                <GridList cellHeight={160} style={{maxWidth: 1150, overflowY: 'hidden' }} cols={5}>
+                    {dados.map((teste,index)=> <RecommendationsCard data={recommendationsData[index]} key = {index}/>)}
                 </GridList>
             </React.Fragment>
         );
-    }
-    return(
-        <Container maxWidth="xl">
-        <h1 className="style-title">{title}</h1>
+    } 
 
-        <Grid style={{marginTop: 10, marginBottom:20}} >
-            <Typography component="div" className = "stats-component">
+    return(
+        <Container disableGutters = {true} className = "root" maxWidth={false} >
+        <Container className = "bg-image" ></Container>
+        <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
+
+        <Grid >
+            <Typography component="div" id = "stats-component">
                 <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
                 {listArtists(data)}
             </Typography>
         </Grid>
-        <Grid style={{marginTop: 10, marginBottom:20}} >
-            <Typography component="div" className = "stats-component">
+        <Grid >
+            <Typography  component="div" id = "stats-component">
+                <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
+                <Grid style={{position: "relative", width:750,height: 550}}>
+                    <TextCloud dados = {genreData}></TextCloud>
+                </Grid>
+            </Typography>
+        </Grid>
+        <Grid >
+            <Typography component="div" id = "stats-component">
+                
                 <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
+
                 <SongsChart data={generalTypeData}></SongsChart>
             </Typography>
         </Grid>
-        <Grid style={{marginTop: 10, marginBottom:20}} >
-            <Typography component="div" className = "stats-component">
-                <Typography variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
-                {listGenres(genreData)}
+        <Grid style={{marginTop: 10, marginBottom:30}}>
+            <Typography component="div" id = "stats-component">
+                <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography>
+                {listRecommendations(recommendationsData)}
             </Typography>
         </Grid>
-        </Container>
+        
+    </Container>
         );
 }
-
-   

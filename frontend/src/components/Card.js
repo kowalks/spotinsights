@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     minWidth: 275,
     margin: '20px 20px',
     position: 'relative',
-    background: 'linear-gradient(to top, #003656 0%, #003656 40%, #ffc300 40%, #ffc300 100%)',
+    background: 'linear-gradient(to top, #0b8034 0%, #0b8034 40%, #1db954 40%, #1db954 100%)',
   },
   content: {
     position: 'relative',
@@ -32,6 +32,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: '70%',
     fontSize: 20,
+    justifyContent: 'center'
   },
   title: {
     fontSize: 36,
@@ -51,8 +52,10 @@ const useStyles = makeStyles({
     // MarginBottom: 100,
     position: 'absolute',
     bottom: 0,
-    FontColor: '#cee1e1',
-    width: '100%', 
+    color: 'white',
+    backgroundColor: "#000000",
+    width: '100%',
+
   }
 });
 

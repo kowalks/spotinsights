@@ -1,19 +1,53 @@
-
-.style-title{
-    color: black;
+.bg-image{
+    background-image: url("https://www-growth.scdn.co/static/home/bursts-mobile.svg");
+    height: 100%;
+    width: 100%;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    z-index: -1;
 }
-.stats-component{
-    border-radius: 15px;
-    background-color: #5160b9;
-    border-radius: 14;
-    /* color: "white"; */
+
+.root {
+    position: relative;
+}
+
+* {
+    box-sizing: border-box;
+  }
+
+@media (min-width: 480px){
+    .bg-image{
+        background-image: url("https://www-growth.scdn.co/static/home/bursts-tablet.svg");
+    }
+}
+@media (min-width: 1200px) {
+    .bg-image{
+        background-image: url("https://www-growth.scdn.co/static/home/bursts.svg");
+    }
+}
+#style-title{
+    color: black;
+    padding-top: 10px;
+    font-weight: 300;
+}
+#stats-component{
     max-height: "85vh";
-    overflow-y: "auto "
+    overflow-y: "auto ";
+    margin-top: 10px;
 }
 .top-artists-title{
-    color: cornsilk;
+    padding-top: 10px;
+    font-weight: 300;
+    color: rgb(52, 49, 38);
+    font-style: bold;
 }
 .genre-content{
-    color: cornsilk;
+    padding-top: 10px;
+    color: rgba(36, 63, 57,0.3);
     font-weight: 800;
+    
 }

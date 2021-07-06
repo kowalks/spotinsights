@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "react-graph-vis": "^1.0.7"
+  }
+}
