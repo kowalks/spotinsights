@@ -426,6 +426,9 @@ class PathFinder(APIView):
             artist_id = queue.pop(0)
 
             tracks = PathFinder.tracks_from_artists(request, artist_id)
+            
+            if not tracks:
+                continue
 
             for track in tracks:
                 feats = track.get('artists')
@@ -462,7 +465,7 @@ class PathFinder(APIView):
               }]
             all_nodes += [end_id]
             
-            edges += [{'from': info.get('parent_id'), 'to': end_id, 'label': info.get('track')}]
+            edges += [{'from': info.get('parent_id'), 'to': end_id, 'label': info.get('track'), 'length': '200'}]
             all_edges += [(info.get('parent_id'), end_id)]
             
             end_id = info.get('parent_id')
@@ -491,7 +494,7 @@ class PathFinder(APIView):
                        nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': '#d3d3d3', 'font': {'color': "#d3d3d3"}}]
                        all_nodes += [feat_id]
                     if feat_id != node_id and not (node_id, feat_id) in all_edges:
-                        edges += [{'from': node_id, 'to': feat_id, 'label': '', 'length': '200'}]
+                        edges += [{'from': node_id, 'to': feat_id, 'label': '', 'length': '100'}]
                         all_edges += [(node_id, feat_id)]
 
         return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)

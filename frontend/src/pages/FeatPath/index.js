@@ -3,7 +3,7 @@ import { Grid } from "@material-ui/core";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { Select, MenuItem, InputLabel, FormControl, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'; 
+import { makeStyles } from '@material-ui/core/styles';
 import ReactDOM from "react-dom";
 import Graph from "react-graph-vis";
 
@@ -26,24 +26,24 @@ export default function FeatPath() {
 
     const options = {
         layout: {
-          hierarchical: false
+            hierarchical: false
         },
         edges: {
-          arrows: {
-              to:{
-                  enabled: false
-              }
-          },
-          color: "#000000",
-          label: "", 
-          labelHighlightBold: false
+            arrows: {
+                to: {
+                    enabled: false
+                }
+            },
+            color: "#000000",
+            label: "",
+            labelHighlightBold: false
         },
         nodes: {
-            color:{
+            color: {
                 border: "blue",
                 background: "#3192b3"
             },
-            font:{
+            font: {
                 size: 10
             },
             shape: "dot",
@@ -54,11 +54,11 @@ export default function FeatPath() {
                 }
             }
         }
-      };    
-    
-      
+    };
+
+
     const events = {
-        
+
     };
 
     const classes = useStyles();
@@ -71,16 +71,14 @@ export default function FeatPath() {
     const updateSelectValSecondArtist = (e) => {
         setSecondArtist(e.target.value)
     }
-    
+
     const [data, setData] = React.useState({
         nodes: [
-          ],
+        ],
         edges: []
-      })
+    })
 
     const handleSubmit = (event) => {
-        alert('A form was submitted: ' + firstArtist + ' e ' + secondArtist);
-
         fetch('/spotify/path-finder?' + new URLSearchParams({
             start_artist: firstArtist,
             end_artist: secondArtist,
@@ -102,23 +100,23 @@ export default function FeatPath() {
 
 
     return (
-        <div>
+        <div id="root">
             <Container maxWidth="xl">
                 <h1 className="styleTitle"></h1>
                 <Grid style={{ marginTop: 10 }}>
-                    <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white" }}>
+                    <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white", paddingTop: "20px", paddingBottom: "20px" }}>
                         <Typography variant="h3" component="h3"> Feat Path </Typography>
 
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="First artist label">Primeiro artista</InputLabel>
+                        <FormControl className={classes.formControl} style={{paddingTop: "20px", paddingBottom: "20px" }}>
+                            <InputLabel id="First artist label" style={{color: "white", paddingTop: "20px"}}>Primeiro artista</InputLabel>
                             <Select
                                 value={firstArtist}
                                 displayEmpty
                                 onChange={updateSelectValFirstArtist}
                                 autoWidth
+                                style={{color: "white"}}
                             >
-                                <MenuItem value='Ed Sheeran'>Ed Sheeran</MenuItem>
-                                {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                             <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -868,20 +866,20 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> 
                             </Select>
                         </FormControl>
 
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="Second artist label">Segundo artista</InputLabel>
-                            <Select
+                        <FormControl className={classes.formControl} style={{paddingTop: "20px", paddingBottom: "20px" }}>
+                            <InputLabel id="Second artist label" style={{color: "white", paddingTop: "20px"}}>Segundo artista</InputLabel>
+                            <Select 
                                 value={secondArtist}
                                 displayEmpty
                                 onChange={updateSelectValSecondArtist}
                                 autoWidth
+                                style={{color: "white"}}
                             >
-                                <MenuItem value='Anitta'>Anitta</MenuItem>
-                                {/* <MenuItem value="None" disabled> Selecione o artista</MenuItem>
+                            <MenuItem value="None" disabled> Selecione o artista</MenuItem>
                             <MenuItem value=' *NSYNC ' >*NSYNC</MenuItem>
                             <MenuItem value=' 2 Chainz ' >2 Chainz</MenuItem>
                             <MenuItem value=' 21 Savage ' >21 Savage</MenuItem>
@@ -1631,22 +1629,24 @@ export default function FeatPath() {
                             <MenuItem value=' Zedd ' >Zedd</MenuItem>
                             <MenuItem value=' Zendaya ' >Zendaya</MenuItem>
                             <MenuItem value=' Zezé Di Camargo and Luciano ' >Zezé Di Camargo &amp; Luciano</MenuItem>
-                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem> */}
+                            <MenuItem value=' ZZ Top ' >ZZ Top</MenuItem>
                             </Select>
                         </FormControl>
-
-                        <Button variant="contained" color="secondary" onClick={handleSubmit} anchor="right" className="LoginStyle">
+                        
+                        <Button variant="contained" color="white" onClick={handleSubmit} style={{display:"block", margin: "auto"}}>
                             Buscar
                         </Button>
                     </Typography>
+
                 </Grid>
             </Container>
             <Graph
-                style={{width: '100%', height: '640px'}}
+                style={{ width: '100%', height: '620px' }}
                 graph={data}
                 options={options}
                 events={events}
             />
+
         </div>
     );
 }
