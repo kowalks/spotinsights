@@ -430,6 +430,9 @@ class PathFinder(APIView):
 
             tracks = PathFinder.tracks_from_artists(request, artist_id)
 
+            if not tracks:
+                continue
+
             for track in tracks:
                 feats = track.get('artists')
                 for feat in feats:
