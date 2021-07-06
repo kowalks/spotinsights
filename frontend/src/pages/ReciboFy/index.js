@@ -73,7 +73,7 @@ export default function ReciboFy() {
         );
     }
 
-const [textButton, setText] = useState(value('medium_term'));
+const [textButton, setText] = useState(value('short_term'));
 
     const list = (dados) => {
         
