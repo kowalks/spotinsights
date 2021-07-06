@@ -433,8 +433,6 @@ class PathFinder(APIView):
             if not tracks:
                 continue
 
-            if not tracks:
-                continue
 
             for track in tracks:
                 feats = track.get('artists')
