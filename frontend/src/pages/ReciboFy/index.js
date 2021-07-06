@@ -7,14 +7,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
 import {FlipCard, Cont} from './flip'
-import ButtonBase from "@material-ui/core/ButtonBase";
+import Button from '@material-ui/core/Button'
 import Switch from '@material-ui/core/Switch';
-// await fetch('/spotify/recibofy').then(response => response.json()).catch( (error) => {console.log("deu ruim")}).then(data => setData(data));
 
 export default function ReciboFy() {
     //botões:
-    let checked = [true, false, false]
-
+    // let checked = [true, false, false]
+    const [checked,setChecked] = useState([true, false, false])
     let title = " ReciboFy ";
     const [dataShort, setDataShort] = useState([]);
     const [dataMedium, setDataMedium] = useState([]);
@@ -47,20 +46,34 @@ export default function ReciboFy() {
     useEffect( () => {
         loadData();
     }, []);
-    useEffect( () => {
-        if(checked[0] == true){
-            checked[1] = false
-            checked[2] = false
+
+    const createPlaylist = async (timeRange) => {
+        try{
+            let response = await fetch('/spotify/recibofy?time_range='+timeRange,{
+                method: 'POST'
+            });
+            let newValue = () => {
+                return(
+                    <Button variant="contained" disabled>
+                        Playlist Criada
+                    </Button>
+                );
+            }
+            setText(newValue)
+            // response = response.json().then(data => setData(data));
+        }catch(error){
+            console.log("deu ruim - createPlaylist")
         }
-        if(checked[1] == true){
-            checked[0] = false
-            checked[2] = false
-        }
-        if(checked[2] == true){
-            checked[0] = false
-            checked[1] = false
-        }
-    }, [checked]);
+    }
+    let value = (timeRange) => {
+        return (
+            <Button variant="contained" color="secondary" onClick={() =>{createPlaylist(timeRange) } }>
+                        Criar Playlist
+            </Button>
+        );
+    }
+
+const [textButton, setText] = useState(value('medium_term'));
 
     const list = (dados) => {
         
@@ -70,9 +83,7 @@ export default function ReciboFy() {
             );
         }
 
-        if(checked[0] == true){
-            checked[0] = false
-            console.log("short")
+        else if(checked[0] == true){
             return(
                 
                 <React.Fragment>
@@ -84,8 +95,6 @@ export default function ReciboFy() {
         }
 
         else if(checked[1] == true){
-            checked[1] = false
-            console.log("medium")
             return(
                 
                 <React.Fragment>
@@ -97,8 +106,6 @@ export default function ReciboFy() {
         }
 
         else if(checked[2] == true){
-            checked[2] = false
-            console.log("long")
             return(
                 
                 <React.Fragment>
@@ -114,13 +121,16 @@ export default function ReciboFy() {
         <Container maxWidth="xl">
     <h1 className="styleTitle"></h1>
         <Grid style={{marginTop: 10}}>
-            <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "white"}}>
-                <Typography variant="h2" component="h2">
+            <Typography component="div" style={{ backgroundColor: '#5160b9', borderRadius: 14, color: "secondary"}}>
+                <Typography variant="h2" component="h2" style={{color:"white"}}>
                 {title}
                 </Typography>
-                <ButtonBase onClick={() => { checked[0] = true; list(dataShort) }} >0</ButtonBase>
-                <ButtonBase onClick={() => { checked[1] = true; list(dataMedium) }} >1</ButtonBase>
-                <ButtonBase onClick={() => { checked[2] = true; list(dataLong) }} >2</ButtonBase>
+                <Typography variant="h2" component="h2">
+                {textButton}
+                </Typography>
+                <Button   variant="contained" size = "large" style = {{ minWidth:'150px' ,margin:'0 10px'}} onClick={() => { setChecked([true,false,false]); setText(value('short_term'))}} > 30 Dias </Button>
+                <Button   variant="contained" size = "large" style = {{ minWidth:'150px' ,margin:'0 10px'}} onClick={() => { setChecked([false,true,false]); setText(value('medium_term') )}} > 6 Meses</Button>
+                <Button   variant="contained" size = "large" style = {{ minWidth:'150px' ,margin:'0 10px'}} onClick={() => { setChecked([false,false,true]); setText(value('long_term') ) }} > Desde o Início</Button>
                 {checked[0]? list(dataShort): (checked[1]? list(dataMedium): (checked[2]? list(dataLong): list({})))}
             </Typography>
         </Grid>
