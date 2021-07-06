@@ -381,6 +381,7 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
                 'name': response.get('tracks')[i]['name'],
                 'artists': response.get('tracks')[i]['artists'][0]['name'],
                 'img': response.get('tracks')[i]['album']['images'][0]['url'],
+                'url':response.get('tracks')[i]['external_urls']['spotify']
             })
         
 
