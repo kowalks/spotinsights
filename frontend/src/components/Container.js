@@ -78,22 +78,22 @@ export default function ComplexGrid(props) {
                 <Typography variant="body2" color="textSecondary" gutterBottom className={classes.string}>
                   {props.data.artists}
                 </Typography>
-                <Typography variant="body2" color="white">
+                <Typography variant="body2" color="initial">
                   Position: {props.data.position}
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="body2" color="white">
+                <Typography variant="body2" color="initial">
                   {min}:{sec}
                 </Typography>
               </Grid>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle1"><StarIcon/>{props.data.rating}</Typography>
+              <Typography variant="subtitle1" style={{color:"white"}}><StarIcon style={{color:"white"}} />{props.data.rating}</Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid className = "back">
+        <Grid className = "back" alignContent = "center">
           <img className={classes.qrcode} style={{borderRadius: 200}} alt="complex" src={props.data.qrcode} />
         </Grid>
       </FlipCard>
