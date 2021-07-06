@@ -483,7 +483,7 @@ class PathFinder(APIView):
             'id': start_id,
             'label': visited[start_id].get('artist_name'),
             'color': {'border': 'blue', 'background': "#3192b3"}, 
-            'font': {'bold': "true", 'size': '20'},
+            'font': {'bold': "true", 'size': '20', 'color': 'black'},
             'shape': 'circularImage',
             'size': '40',
         }]
@@ -508,7 +508,7 @@ class PathFinder(APIView):
                 for feat in feats:
                     feat_id = feat.get('id')
                     if not feat_id in all_nodes:
-                       nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': '#d3d3d3', 'font': {'color': "#d3d3d3"}}]
+                       nodes += [{'id': feat_id, 'label': feat.get('name'), 'color': '#d3d3d3', 'font': {'color': "#d3d3d3"}, 'shape': 'dot', 'size': '10'}]
                        all_nodes += [feat_id]
                     if feat_id != node_id and not (node_id, feat_id) in all_edges:
                         edges += [{'from': node_id, 'to': feat_id, 'label': '', 'length': '100'}]
