@@ -70,28 +70,6 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
-    const listGenres = (dados) => {
-        // console.log(dados);
-        if(dados.length == 0 || dados.length == undefined){
-            return (
-                <h1>Carregando...</h1>
-            );
-        }
-
-        return(
-            
-            <React.Fragment >
-                <GridList cellHeight={160} style={{ overflowY: 'hidden' }} cols={5}>
-                    {dados.map((teste,index)=> <Typography component="h5" 
-                                                            alignCenter variant="h5"
-                                                            className="genre-content"
-                                                            key={index}>
-                                                            {dados[index]}
-                                                 </Typography>)}
-                </GridList>
-            </React.Fragment>
-        );
-    }
     const listRecommendations = (dados) => {
         if(dados.length == 0 || dados.length == undefined){
             return (
