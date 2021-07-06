@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
     subtitulo: {
         paddingBottom: '20px',
         flexGrow: 1,
-        color: 'white'
+        color: 'white',
+        fontSize: 20
     }
 }));
 
@@ -25,16 +26,16 @@ const LandingPage = () => {
     const classes = useStyles()
     return (
         <Container maxWidth="xl">
-            <Typography     style={{ backgroundColor: '#001D3D', borderRadius: 14, color: "white" }}>
-                <Grid style={{ marginTop: 10 }}>
+            <Typography     style={{ backgroundColor: '#242422', borderRadius: 14, color: "white" }}>
+                <Grid style={{ marginTop: 20 }}>
 
                     <Typography  className={classes.subtitulo}>
                         
                         <Typography className={classes.titulo} variant="h2" component="h2">
-                            Descubra mais sobre o seu gosto musical
+                            Expanda seu horizonte musical!
                         </Typography>
 
-                        Geramos resultados extraordinários a partir da Música. Entenda como a música te afeta, seus gêneros e soms favoritos!
+                        Geramos resultados inéditos a partir de seu histórico no Spotify! Entenda mais sobre seus gostos e experimente novos ritmos!
 
                     </Typography>
                 </Grid>
