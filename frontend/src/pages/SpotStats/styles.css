@@ -2,8 +2,6 @@
     background-image: url("https://www-growth.scdn.co/static/home/bursts-mobile.svg");
     height: 100%;
     width: 100%;
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
