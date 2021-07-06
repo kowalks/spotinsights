@@ -94,39 +94,39 @@ export default function SpotStats() {
     } 
 
     return(
-        <Container className= "root" >
-            <Container className = "bg-image" ></Container>
-            <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
+        <Container disableGutters = {true} className = "root" maxWidth={false} >
+        <Container className = "bg-image" ></Container>
+        <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
 
-            <Grid >
-                <Typography component="div" id = "stats-component">
-                    <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
-                    {listArtists(data)}
-                </Typography>
-            </Grid>
-            <Grid >
-                <Typography  component="div" id = "stats-component">
-                    <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
-                    <Grid style={{position: "relative", width:750,height: 550}}>
-                        <TextCloud dados = {genreData}></TextCloud>
-                    </Grid>
-                </Typography>
-            </Grid>
-            <Grid >
-                <Typography component="div" id = "stats-component">
-                    
-                    <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
+        <Grid >
+            <Typography component="div" id = "stats-component">
+                <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
+                {listArtists(data)}
+            </Typography>
+        </Grid>
+        <Grid >
+            <Typography  component="div" id = "stats-component">
+                <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
+                <Grid style={{position: "relative", width:750,height: 550}}>
+                    <TextCloud dados = {genreData}></TextCloud>
+                </Grid>
+            </Typography>
+        </Grid>
+        <Grid >
+            <Typography component="div" id = "stats-component">
+                
+                <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
 
-                    <SongsChart data={generalTypeData}></SongsChart>
-                </Typography>
-            </Grid>
-            <Grid style={{marginTop: 10, marginBottom:30}}>
-                <Typography component="div" id = "stats-component">
-                    <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography>
-                    {listRecommendations(recommendationsData)}
-                </Typography>
-            </Grid>
-            
-        </Container>
+                <SongsChart data={generalTypeData}></SongsChart>
+            </Typography>
+        </Grid>
+        <Grid style={{marginTop: 10, marginBottom:30}}>
+            <Typography component="div" id = "stats-component">
+                <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography>
+                {listRecommendations(recommendationsData)}
+            </Typography>
+        </Grid>
+        
+    </Container>
         );
 }
