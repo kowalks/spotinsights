@@ -141,13 +141,14 @@ class CurrentSong(APIView):
 class TopTracks(APIView):
     def get(self, request, format=None):
         limit = request.GET.get('limit', 20)
+        time_range = request.GET.get('time_range', 'medium_term')
 
         endpoint = 'me/top/tracks'
 
         if not request.session.exists(request.session.session_key):
             request.session.create()
 
-        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit})
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'limit': limit, 'time_range': time_range})
 
         if 'error' in response or 'items' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -272,7 +273,7 @@ class TopArtists(APIView):
 
 class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artistas
     def get(self, request, format=None):
-        limit = request.GET.get('limit', 3)
+        limit = request.GET.get('limit', 5)
 
         endpoint = 'me/top/artists'
 
@@ -288,13 +289,12 @@ class TopGenres(APIView):          #puxa os gêneros musicais do top 3 dos artis
 
         genres = []
 
-        for i in range(0, len(items)):
-            for j in range(0, len(items[i]['genres'])):
-                genres.append(items[i]['genres'][j]) #retorna um lista com os gêneros mais tops
-        
-        genres = {'genres': genres}
+        for item in items:
+            for genre in item.get('genres'):
+                if genre not in genres:
+                    genres += [genre]
 
-        return Response(genres, status=status.HTTP_200_OK)
+        return Response({'genres': genres}, status=status.HTTP_200_OK)
 
 
 class UserDevice(APIView):        #retorna as infos como id, is_active, name (e.g. Android), type (e.g. Smartphone)
@@ -391,8 +391,8 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_artist = request.GET.get('start_artist','Ed Sheeren')
-        end_artist = request.GET.get('end_artist', 'Anitta')
+        start_artist = request.GET.get('start_artist','Karol Conká')
+        end_artist = request.GET.get('end_artist', 'Israel e Rodolffo')
         
         endpoint = 'search'
 
@@ -425,8 +425,14 @@ class PathFinder(APIView):
         while queue:
             artist_id = queue.pop(0)
 
+            artist_name = visited[artist_id]['artist_name']
+            print(f'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ARTIST: {artist_name}')
+
             tracks = PathFinder.tracks_from_artists(request, artist_id)
             
+            if not tracks:
+                continue
+
             if not tracks:
                 continue
 
@@ -435,7 +441,7 @@ class PathFinder(APIView):
                 for feat in feats:
                     feat_id = feat.get('id')
                     if not feat_id in visited:
-                        print(feat.get('name'), track.get('name'))
+                        print(feat.get('name'))
                         visited[feat_id] = {
                             'artist_id': feat_id,
                             'artist_name': feat.get('name'),
@@ -455,13 +461,13 @@ class PathFinder(APIView):
 
         while end_id != start_id:
             info = visited[end_id]
-            nodes += [{'id': end_id, 
-            'label': info.get('artist_name'),
-             'color': {'border': 'blue', 'background': "#3192b3"},
-              'font': {'bold': "true", 'size': '20'}, 
-              'shape': 'circularImage',
-               'size': '40',
-              'image': PathFinder.get_image(request, end_id).get('url')
+            nodes += [{
+                'id': end_id, 
+                'label': info.get('artist_name'),
+                'color': {'border': 'blue', 'background': "#3192b3"},
+                'font': {'bold': "true", 'size': '20'}, 
+                'shape': 'circularImage',
+                'size': '40',
               }]
             all_nodes += [end_id]
             
@@ -470,15 +476,20 @@ class PathFinder(APIView):
             
             end_id = info.get('parent_id')
 
-        nodes += [{'id': start_id,
-         'label': visited[start_id].get('artist_name'),
-          'color': {'border': 'blue', 'background': "#3192b3"}, 
-          'font': {'bold': "true", 'size': '20'},
-          'shape': 'circularImage',
-          'size': '40',
-          'image': PathFinder.get_image(request, start_id).get('url'),
-          }]
+        nodes += [{
+            'id': start_id,
+            'label': visited[start_id].get('artist_name'),
+            'color': {'border': 'blue', 'background': "#3192b3"}, 
+            'font': {'bold': "true", 'size': '20'},
+            'shape': 'circularImage',
+            'size': '40',
+        }]
         all_nodes += [start_id]
+
+        # Node Images
+        images = PathFinder.get_multiple_images(request, all_nodes)
+        for i, node in enumerate(nodes):
+            node['image'] = images[i]
 
         # Other nodes
         path_nodes = nodes.copy()
@@ -499,10 +510,14 @@ class PathFinder(APIView):
 
         return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)
 
-    def get_image(request, artist_id):
-        endpoint = f'artists/{artist_id}'
-        image = spotify_api_request(request.session.session_key, endpoint).get('images')[0]
-        return image
+    def get_multiple_images(request, artist_ids):
+        endpoint = f'artists/'
+        form_ids = ','.join(artist_ids)
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'ids': form_ids})
+        images = [artist.get('images')[0].get('url') for artist in response.get('artists')]
+
+        return images
 
     def tracks_from_artists(request, artist_id):
         endpoint = f'artists/{artist_id}/albums'
