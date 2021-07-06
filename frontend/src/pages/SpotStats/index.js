@@ -91,11 +91,10 @@ export default function SpotStats() {
                 </GridList>
             </React.Fragment>
         );
-    }
-
+    } 
 
     return(
-        <Container disableGutters = {true} className = "root" maxWidth={false} >
+        <Container className= "root" >
             <Container className = "bg-image" ></Container>
             <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
 
