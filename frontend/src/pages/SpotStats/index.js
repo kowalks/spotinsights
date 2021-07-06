@@ -34,7 +34,9 @@ export default function SpotStats() {
     const loadGenresData = async () => {
         try{
             let genreResponse = await fetch('/spotify/topgenres');
-            genreResponse = genreResponse.json().then(genreData => setGenreData(genreData.genres));
+            genreResponse = genreResponse.json().then(genreData => {
+                setGenreData(genreData.genres);
+            });
         }catch(error){
             console.log("problema no GenreData");
         }
@@ -53,6 +55,8 @@ export default function SpotStats() {
         loadGenresData();
         loadRecommendationsData()
     }, []);
+
+
     const listArtists = (dados) => {
         // console.log(dados);
         if(dados.length == 0 || dados.length == undefined){
@@ -70,6 +74,11 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 4ed530b86448f143d3defa90b9d0efaf35dc5b7b
     const listRecommendations = (dados) => {
         if(dados.length == 0 || dados.length == undefined){
             return (
@@ -86,40 +95,42 @@ export default function SpotStats() {
             </React.Fragment>
         );
     }
+
+
     return(
         <Container disableGutters = {true} className = "root" maxWidth={false} >
-        <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
+            <Container className = "bg-image" ></Container>
+            <Typography component="h1" variant="h1" id="style-title">{title}</Typography>
 
-        <Grid >
-            <Typography component="div" id = "stats-component">
-                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography> */}
-                {listArtists(data)}
-            </Typography>
-        </Grid>
-        <Grid >
-            <Typography  component="div" id = "stats-component">
-                {/* <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography> */}
-                {/* {listGenres(genreData)} */}
-                <Grid style={{position: "relative", width:900,height: 550}}>
-                    <TextCloud dados = {genreData}></TextCloud>
-                </Grid>
-            </Typography>
-        </Grid>
-        <Grid >
-            <Typography component="div" id = "stats-component">
-                
-                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography> */}
+            <Grid >
+                <Typography component="div" id = "stats-component">
+                    <Typography variant="h3" component="h3" className = "top-artists-title"> Top Artistas </Typography>
+                    {listArtists(data)}
+                </Typography>
+            </Grid>
+            <Grid >
+                <Typography  component="div" id = "stats-component">
+                    <Typography  variant="h3" component="h3" className = "top-artists-title"> Gêneros Favoritos </Typography>
+                    <Grid style={{position: "relative", width:750,height: 550}}>
+                        <TextCloud dados = {genreData}></TextCloud>
+                    </Grid>
+                </Typography>
+            </Grid>
+            <Grid >
+                <Typography component="div" id = "stats-component">
+                    
+                    <Typography variant="h3" component="h3" className = "top-artists-title"> General Data </Typography>
 
-                <SongsChart data={generalTypeData}></SongsChart>
-            </Typography>
-        </Grid>
-        <Grid style={{marginTop: 10, marginBottom:30}}>
-            <Typography component="div" id = "stats-component">
-                {/* <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography> */}
-                {listRecommendations(recommendationsData)}
-            </Typography>
-        </Grid>
-        
+                    <SongsChart data={generalTypeData}></SongsChart>
+                </Typography>
+            </Grid>
+            <Grid style={{marginTop: 10, marginBottom:30}}>
+                <Typography component="div" id = "stats-component">
+                    <Typography variant="h3" component="h3" className = "top-artists-title"> Experimente </Typography>
+                    {listRecommendations(recommendationsData)}
+                </Typography>
+            </Grid>
+            
         </Container>
         );
 }
