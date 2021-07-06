@@ -392,8 +392,8 @@ class Recommendations(APIView):                #faz 3 recomendações a partir d
 
 class PathFinder(APIView):
     def get(self, request, format=None):
-        start_artist = request.GET.get('start_artist','Karol Conká')
-        end_artist = request.GET.get('end_artist', 'Israel e Rodolffo')
+        start_artist = request.GET.get('start_artist','Ed Sheeran')
+        end_artist = request.GET.get('end_artist', 'Anitta')
         
         endpoint = 'search'
 
@@ -446,6 +446,7 @@ class PathFinder(APIView):
                             'artist_name': feat.get('name'),
                             'parent_id': artist_id,
                             'track': track.get('name'),
+                            'track_id': track.get('id'),
                         }
                         if feat_id == end_id:
                             return visited
@@ -455,6 +456,7 @@ class PathFinder(APIView):
     def collect_info(request, visited, start_id, end_id):
         all_nodes = []
         all_edges = []
+        all_tracks = []
         nodes = []
         edges = []
 
@@ -470,6 +472,8 @@ class PathFinder(APIView):
               }]
             all_nodes += [end_id]
             
+            all_tracks += [info.get('track_id')]
+
             edges += [{'from': info.get('parent_id'), 'to': end_id, 'label': info.get('track'), 'length': '200'}]
             all_edges += [(info.get('parent_id'), end_id)]
             
@@ -490,6 +494,9 @@ class PathFinder(APIView):
         for i, node in enumerate(nodes):
             node['image'] = images[i]
 
+        # Tracks Path
+        path = PathFinder.get_info(request, all_tracks)
+
         # Other nodes
         path_nodes = nodes.copy()
         for node in path_nodes:
@@ -507,7 +514,7 @@ class PathFinder(APIView):
                         edges += [{'from': node_id, 'to': feat_id, 'label': '', 'length': '100'}]
                         all_edges += [(node_id, feat_id)]
 
-        return Response({'nodes': nodes, 'edges': edges}, status=status.HTTP_200_OK)
+        return Response({'graph': {'nodes': nodes, 'edges': edges}, 'path': path}, status=status.HTTP_200_OK)
 
     def get_multiple_images(request, artist_ids):
         endpoint = f'artists/'
@@ -517,6 +524,20 @@ class PathFinder(APIView):
         images = [artist.get('images')[0].get('url') for artist in response.get('artists')]
 
         return images
+
+    def get_info(request, track_ids):
+        endpoint = f'tracks/'
+        form_ids = ','.join(track_ids)
+
+        response = spotify_api_request(request.session.session_key, endpoint, extra={'ids': form_ids})
+        info = [{
+            "img" : track.get('album').get('images')[0].get('url'),
+            "name"  : track.get('name'),
+            "url"  : track.get('external_urls').get('spotify'),
+            "artists" : '',
+            } for track in response.get('tracks')]
+
+        return info
 
     def tracks_from_artists(request, artist_id):
         endpoint = f'artists/{artist_id}/albums'
@@ -536,7 +557,7 @@ class PathFinder(APIView):
         for album in albums.get('albums'):
             if album.get('album_type') != 'compilation':
                 trks = album.get('tracks').get('items')
-                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists')} for trk in trks]
+                tracks += [{'name': trk.get('name'), 'artists': trk.get('artists'), 'id': trk.get('id')} for trk in trks]
         
         return tracks
 
