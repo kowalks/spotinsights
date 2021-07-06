@@ -93,7 +93,7 @@ export default function ComplexGrid(props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid className = "back" alignContent = "center">
+        <Grid className = "back">
           <img className={classes.qrcode} style={{borderRadius: 200}} alt="complex" src={props.data.qrcode} />
         </Grid>
       </FlipCard>
